@@ -35,7 +35,7 @@ bool SHALoader::parse()
     int i = 0;
     for (const QString &line : m_fileContent) {
         ++i;
-        auto type = getLineType(line);
+        auto type = getTypeLine(line);
         if (type == LineType::Undefined) {
             qInfo() << "NumLine:" << i;
             qInfo() << "Type:" << type;
@@ -49,19 +49,16 @@ bool SHALoader::parse()
     return true;
 }
 
-SHALoader::LineType
-SHALoader::getLineType(const QString &str)
+SHALoader::LineType SHALoader::getTypeLine(const QString &line)
 {
-    const QString &&trimmed = str.trimmed();
-    auto checkPattern = [&](const QString &pattern) {
+    const QString &&trimmedLine = line.trimmed();
+    auto checkPattern = [&trimmedLine](const QString &pattern) {
         return QRegExp(pattern, Qt::CaseSensitive, QRegExp::WildcardUnix)
-            .exactMatch(trimmed);
+            .exactMatch(trimmedLine);
     };
 
     if (checkPattern("Make(*)"))
         return LineType::Make;
-    if (checkPattern("ver(*)"))
-        return LineType::Ver;
     if (checkPattern("Add(*)"))
         return LineType::Add;
     if (checkPattern("{"))
@@ -72,22 +69,34 @@ SHALoader::getLineType(const QString &str)
         return LineType::Link;
     if (checkPattern("Point(*)"))
         return LineType::Point;
-    if (checkPattern("@Hint=*"))
-        return LineType::Hint;
-    if (checkPattern("AddHint(*"))
-        return LineType::AddHint;
-    if (checkPattern("\\**"))
-        return LineType::Comment;
-    if (checkPattern("Pos(*)"))
-        return LineType::Pos;
     if (checkPattern("*=*"))
         return LineType::Prop;
     if (checkPattern("BEGIN_SDK"))
         return LineType::BEGIN_SDK;
     if (checkPattern("END_SDK"))
         return LineType::END_SDK;
-    if (trimmed.isEmpty())
+    if (trimmedLine.isEmpty())
         return LineType::Empty;
+
+    //Ignore
+    if (checkPattern("AddHint(*"))
+        return LineType::Ignore;
+    if (checkPattern("ver(*)"))
+        return LineType::Ignore;
+    if (checkPattern("\\**"))
+        return LineType::Ignore;
+    if (checkPattern("@*=*"))
+        return LineType::Ignore;
+    if (checkPattern("Pos(*)"))
+        return LineType::Ignore;
+    if (checkPattern("elink(*)"))
+        return LineType::Ignore;
+    if (checkPattern("MakeExt(*)"))
+        return LineType::Ignore;
+    if (checkPattern("PColor(*)"))
+        return LineType::Ignore;
+    if (checkPattern("MakeTrans(*)"))
+        return LineType::Ignore;
 
     return LineType::Undefined;
 }

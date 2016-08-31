@@ -8,17 +8,13 @@ class SHALoader : public QObject {
 public:
     enum LineType {
         Undefined,
-        Comment,
-        Pos,
+        Ignore,
         Make,
-        Ver,
         Add,
         OpenBlock,
         CloseBlock,
         Link,
         Point,
-        Hint,
-        AddHint,
         Prop,
         BEGIN_SDK,
         END_SDK,
@@ -40,5 +36,5 @@ private:
 private:
     bool loadFile();
     bool parse();
-    LineType getLineType(const QString &str);
+    LineType getTypeLine(const QString &line);
 };

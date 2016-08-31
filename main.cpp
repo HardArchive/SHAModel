@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
         if (!loader.loadSha())
             break;
     }
-
+    qInfo() << "Проверка закончена!";
     //SHALoader loader(ex2);
     //loader.loadSha();
 

@@ -1,13 +1,13 @@
 *Демонстрация работы "быстрого математического блока " - FastMathParse#13#10______________#13#10Автор: Galkov
 Make(delphi)
-Pos(0,0)
+ver(4.05 build 186)
 Add(MainForm,49024,49,175)
 {
  Left=242
  Top=105
  Width=558
  Height=460
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="FastMathParser"
  Icon=[ZIP5E07000078DAED94310E823018859F13373018071D1DBD8171F35656191835DD1C8CC7F1188C8C8E8EE541A1A9B44A5A16637CFC8F342FCDC7DF1F0230E195A6A8EFD825C014C08A668435745E6B99E0AF5F916ACA0D8324A574393A0C928018E40C764B08B3CF1CB73737B139CDBA059A9DEAB5BC89D38F3267D41CD949AFE14BBC1C658D2BFA5CAAEBBA3779FBB9EF925E3FA6342AE8A53B936B3918CD098578391110971307E971A22136670CC47046422CD477FC06F921FB5C160AF71B7D7D22BF94389EB7EC3983989510F307C442416CE83DCDFD073AA373FA44172DA7027027D5D8]
 }
@@ -21,7 +21,7 @@ Add(Edit,24927,161,70)
  Width=550
  Height=21
  Align=2
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Text="1+%3*(%1*%2+(%1*2+3*(%2*2+3*(%2*2+3*(%2*2+3*(%2*2+3*(%2*2+3*(%2*2+3*(%2*2+1)))))))))"
 }
 Add(Message,63573,364,112)
@@ -31,17 +31,17 @@ Add(Message,63573,364,112)
 }
 Add(StringTable,49841,273,119)
 {
+ @Hint=#5:ЕЕЕЕЕ|25:ЫВОАРООЛРЫВАФВлвамоварлмо|35:чьтсимтчбьтчмрываыва орывапв ывопро|
  Left=90
  Top=21
  Width=460
  Height=412
  Align=5
- Font=[Courier New,8,0,16711680]
+ Font=[Courier New,8,0,16711680,1]
  FileName="Proc.lst"
- Columns='Hex =115','Mnemonics   =175','Comments=150'
+ Columns=#8:Hex =115|16:Mnemonics   =175|12:Comments=150|
  StrDelimiter="\9"
  SaveWidth=0
- @Hint='ЕЕЕЕЕ','ЫВОАРООЛРЫВАФВлвамоварлмо','чьтсимтчбьтчмрываыва орывапв ывопро'
 }
 Add(ChildPanel,5198,56,112)
 {
@@ -51,7 +51,6 @@ Add(ChildPanel,5198,56,112)
  link(onEvent4,91755:doEvent1,[(101,139)(101,202)])
 }
 BEGIN_SDK
-Pos(0,0)
   Add(EditMulti,71424,3,3)
   {
    EventCount=4
@@ -61,14 +60,13 @@ Pos(0,0)
    link(Var3,13177:Text,[(23,183)(111,183)])
    link(Var4,59158:Text,[(30,190)(153,190)])
   }
-  Add(Panel,99441,21,21)
+  Add(Panel,99441,126,63)
   {
    Top=21
    Width=90
    Height=412
    Align=1
-   Font=[Arial,8,0,0]
-   Caption=""
+   Font=[Arial,8,0,0,1]
    BevelInner=1
   }
   Add(Edit,59158,147,126)
@@ -77,7 +75,7 @@ Pos(0,0)
    Top=210
    Width=70
    Height=21
-   Font=[Arial,8,0,0]
+   Font=[Arial,8,0,0,1]
    Text="Аргумент4"
   }
   Add(Button,43147,203,126)
@@ -85,16 +83,16 @@ Pos(0,0)
    Left=15
    Top=90
    Width=60
-   Font=[Arial,8,0,0]
+   Font=[Arial,8,0,0,1]
    Caption="Save"
-   link(onClick,71424:onEvent4,[(269,132)(269,30)])
+   link(onClick,71424:onEvent4,[(269132)(269,30)])
   }
   Add(Button,67731,203,91)
   {
    Left=15
    Top=15
    Width=60
-   Font=[Arial,8,0,0]
+   Font=[Arial,8,0,0,1]
    Caption="doMathStr"
    link(onClick,71424:onEvent3,[(269,97)(269,23)])
   }
@@ -104,7 +102,7 @@ Pos(0,0)
    Top=150
    Width=70
    Height=21
-   Font=[Arial,8,0,0]
+   Font=[Arial,8,0,0,1]
    Text="Аргумент2"
   }
   Add(Button,41458,203,56)
@@ -112,7 +110,7 @@ Pos(0,0)
    Left=15
    Top=65
    Width=60
-   Font=[Arial,8,0,0]
+   Font=[Arial,8,0,0,1]
    Caption="doClear"
    Data=Real(-5)
    link(onClick,71424:onEvent2,[(269,62)(269,16)])
@@ -123,7 +121,7 @@ Pos(0,0)
    Top=120
    Width=70
    Height=21
-   Font=[Arial,8,0,0]
+   Font=[Arial8,0,0,1
    Text="Аргумент1"
   }
   Add(Edit,13177,105,126)
@@ -132,7 +130,7 @@ Pos(0,0)
    Top=180
    Width=70
    Height=21
-   Font=[Arial,8,0,0]
+   Font=[Arial,8,0,0,1]
    Text="Аргумент3"
   }
   Add(Button,5191,203,21)
@@ -140,11 +138,20 @@ Pos(0,0)
    Left=15
    Top=40
    Width=60
-   Font=[Arial,8,0,0]
+   Font=[Arial,8,0,0,1]
    Caption="doCalc"
    Data=Real(-5)
    link(onClick,71424:onEvent1,[(269,27)(269,9)])
   }
+  Add(MultiElementEx,13115311,70,70)
+  {
+  }
+  BEGIN_SDK
+    Add(EditMultiEx,8195020,21,21)
+    {
+     EventCount=#10:!@#$%^&*()|
+    }
+  END_SDK
 END_SDK
 Add(ArrayRW,33044,322,112)
 {
@@ -166,7 +173,7 @@ Add(DoData,40306,238,210)
 }
 Add(StrList,99991,308,56)
 {
- Strings='Синтаксическая ошибка!','Ошибка вычислений!'
+ Strings=#22:Синтаксическая ошибка!|18:Ошибка вычислений!|
 }
 Add(DoData,93894,161,112)
 {
