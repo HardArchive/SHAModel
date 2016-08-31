@@ -1,7 +1,7 @@
 QT += core
 QT -= gui
 
-CONFIG += c++11
+CONFIG += c++14
 
 TARGET = SHALoader
 CONFIG += console
@@ -10,7 +10,7 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    project.cpp
+    shaloader.cpp
 
 HEADERS += \
-    project.h
+    shaloader.h

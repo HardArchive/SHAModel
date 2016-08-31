@@ -2,12 +2,14 @@
 
 #include <QObject>
 
-class Project : public QObject {
+class SHALoader : public QObject {
     Q_OBJECT
 
 public:
     enum LineType {
         Undefined,
+        Comment,
+        Pos,
         Make,
         Ver,
         Add,
@@ -19,12 +21,16 @@ public:
         AddHint,
         Prop,
         BEGIN_SDK,
-        END_SDK
+        END_SDK,
+        Empty
     };
     Q_ENUM(LineType)
 
 public:
-    explicit Project(const QString &filePath, QObject *parent = 0);
+    explicit SHALoader(const QString &filePath, QObject *parent = 0);
+
+public:
+    bool loadSha();
 
 private:
     QStringList m_fileContent;
@@ -32,7 +38,7 @@ private:
     QString m_package;
 
 private:
-    bool load();
-    void parse();
+    bool loadFile();
+    bool parse();
     LineType getLineType(const QString &str);
 };
