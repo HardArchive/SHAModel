@@ -20,7 +20,7 @@ bool SHALoader::loadSha()
     return true;
 }
 
-QString SHALoader::getBlockTok(const QString &line, const QString &beginTok, const QString &endTok)
+QString SHALoader::getTokBlock(const QString &line, const QString &beginTok, const QString &endTok)
 {
     int beginTokLen = beginTok.length();
     auto begin = line.indexOf(beginTok) + beginTokLen;
@@ -43,34 +43,65 @@ bool SHALoader::parse()
     LineType state = LineType::Null;
     QStringList elementParams;
 
+    bool openBlock = false;
+
     for (const QString v : m_fileContent) {
         const QString &&line = v.trimmed();
+        LineType type = getTypeLine(line);
 
-        switch (getTypeLine(line)) {
+        switch (type) {
         case LineType::Undefined:
             qInfo() << "String:" << line;
             qInfo() << "File:" << m_filePath;
 
             return false;
-        case LineType::Make: {
-            m_package = getBlockTok(line, "Make(", ")");
-            break;
-        }
-        case LineType::Ver: {
-            m_version = getBlockTok(line, "ver(", ")");
-            break;
-        }
-        case LineType::Add: {
-            elementParams = getBlockTok(line, "Add(", ")").split(',');
+        case LineType::Make:
+            m_package = getTokBlock(line, "Make(", ")");
+            continue;
+
+        case LineType::Ver:
+            m_version = getTokBlock(line, "ver(", ")");
+            continue;
+
+        case LineType::Add:
+            if (openBlock == true) {
+                qWarning() << "Отсутствует фигурная скобка \"}\" закрывающая блок!";
+                return false;
+            }
+
+            elementParams = getTokBlock(line, "Add(", ")").split(',');
             state = LineType::Add;
-            break;
-        }
-        default:
-            break;
+            continue;
+
+        case LineType::Ignore:
+            continue;
         }
 
         switch (state) {
         case LineType::Add: {
+            if (openBlock == false) {
+                if (type == LineType::OpenBlock) {
+                    openBlock = true;
+                    continue;
+                } else {
+                    qWarning() << "Отсутствует фигурная скобка \"{\" открывающая блок!";
+                    return false;
+                }
+            }
+            //Начало OpenBlock
+
+            switch (type) {
+            case LineType::Link:
+                qInfo() << getTokBlock(line, "link(", ")");
+
+                continue;
+                break;
+            case LineType::CloseBlock:
+                openBlock = false;
+                state = LineType::Null;
+                continue;
+                break;
+            }
         }
         case LineType::BEGIN_SDK: {
         }

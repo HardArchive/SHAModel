@@ -39,7 +39,7 @@ private:
     QString m_version;
 
 private:
-    QString getBlockTok(const QString &line, const QString &beginTok, const QString &endTok);
+    QString getTokBlock(const QString &line, const QString &beginTok, const QString &endTok);
     bool loadFile();
     bool parse();
     LineType getTypeLine(const QString &line);
