@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QVector>
 
 class SHAModel : public QObject {
     Q_OBJECT

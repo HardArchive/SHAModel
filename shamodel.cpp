@@ -41,9 +41,12 @@ bool SHAModel::loadFile()
 bool SHAModel::parse()
 {
     LineType state = LineType::Null;
-    QStringList elementParams;
-
     bool openBlock = false;
+
+    QVariantMap data;
+    QVariantList elementList;
+    QVariantMap element;
+    QVariantMap container;
 
     for (const QString v : m_fileContent) {
         const QString &&line = v.trimmed();
@@ -56,23 +59,32 @@ bool SHAModel::parse()
 
             return false;
         case LineType::Make:
-            m_package = getTokBlock(line, "Make(", ")");
+            data.insert("package", getTokBlock(line, "Make(", ")"));
             continue;
 
         case LineType::Ver:
-            m_version = getTokBlock(line, "ver(", ")");
+            data.insert("version", getTokBlock(line, "ver(", ")"));
             continue;
 
-        case LineType::Add:
+        case LineType::Add: {
             if (openBlock == true) {
                 qWarning() << "Отсутствует фигурная скобка \"}\" закрывающая блок!";
                 return false;
             }
+            QStringList params = getTokBlock(line, "Add(", ")").split(',');
+            if (params.size() < 4) {
+                qWarning() << "К-во аргументов меньше 4-х.";
+                return false;
+            }
+            element = QVariantMap();
+            element.insert("name", params[0]);
+            element.insert("id", params[1].toInt());
+            element.insert("x", params[2].toInt());
+            element.insert("y", params[3].toInt());
 
-            elementParams = getTokBlock(line, "Add(", ")").split(',');
             state = LineType::Add;
             continue;
-
+        }
         case LineType::Ignore:
             continue;
         }
@@ -89,9 +101,10 @@ bool SHAModel::parse()
                 }
             }
             //Начало OpenBlock
-
+            //http://www.jsoneditoronline.org/?id=6c2b44125a2456164e333cf59f300fac
             switch (type) {
             case LineType::Link:
+                element.insert()
                 qInfo() << getTokBlock(line, "link(", ")");
 
                 continue;
