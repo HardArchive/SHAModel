@@ -85,7 +85,7 @@ BEGIN_SDK
    Width=60
    Font=[Arial,8,0,0,1]
    Caption="Save"
-   link(onClick,71424:onEvent4,[(269132)(269,30)])
+   link(onClick,71424:onEvent4,[(269132,30)])
   }
   Add(Button,67731,203,91)
   {
@@ -121,7 +121,7 @@ BEGIN_SDK
    Top=120
    Width=70
    Height=21
-   Font=[Arial8,0,0,1
+   Font=[Arial8,0,0,1,1]
    Text="Аргумент1"
   }
   Add(Edit,13177,105,126)
@@ -171,7 +171,7 @@ Add(DoData,40306,238,210)
  link(onEventData,72386:doPut,[])
  link(Data,66015:Proc,[])
 }
-Add(StrList,99991,308,56)
+Add(StrList,99991,308,49)
 {
  Strings=#22:Синтаксическая ошибка!|18:Ошибка вычислений!|
 }
