@@ -2,7 +2,7 @@
 
 #include <QObject>
 
-class SHALoader : public QObject {
+class SHAModel : public QObject {
     Q_OBJECT
 
 public:
@@ -25,7 +25,7 @@ public:
     Q_ENUM(LineType)
 
 public:
-    explicit SHALoader(const QString &filePath, QObject *parent = 0);
+    explicit SHAModel(const QString &filePath, QObject *parent = 0);
 
 public:
     bool loadSha();

@@ -10,7 +10,7 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    shaloader.cpp
+    shamodel.cpp
 
 HEADERS += \
-    shaloader.h
+    shamodel.h

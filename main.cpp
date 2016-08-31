@@ -1,7 +1,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QDebug>
-#include "shaloader.h"
+#include "shamodel.h"
 
 QStringList loadFiles(const QString &startDir, QStringList filters)
 {
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     //    if (!loader.loadSha())
     //        break;
     //}
-    SHALoader loader(ex2);
+    SHAModel loader(ex2);
     loader.loadSha();
 
     return a.exec();

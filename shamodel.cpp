@@ -1,15 +1,15 @@
-#include "shaloader.h"
+#include "shamodel.h"
 #include <QDebug>
 #include <QFile>
 #include <QRegExp>
 
-SHALoader::SHALoader(const QString &filePath, QObject *parent)
+SHAModel::SHAModel(const QString &filePath, QObject *parent)
     : QObject(parent)
     , m_filePath(filePath)
 {
 }
 
-bool SHALoader::loadSha()
+bool SHAModel::loadSha()
 {
     if (!loadFile())
         return false;
@@ -20,7 +20,7 @@ bool SHALoader::loadSha()
     return true;
 }
 
-QString SHALoader::getTokBlock(const QString &line, const QString &beginTok, const QString &endTok)
+QString SHAModel::getTokBlock(const QString &line, const QString &beginTok, const QString &endTok)
 {
     int beginTokLen = beginTok.length();
     auto begin = line.indexOf(beginTok) + beginTokLen;
@@ -28,7 +28,7 @@ QString SHALoader::getTokBlock(const QString &line, const QString &beginTok, con
     return line.mid(begin, end);
 }
 
-bool SHALoader::loadFile()
+bool SHAModel::loadFile()
 {
     QFile file(m_filePath);
     if (!file.open(QIODevice::ReadOnly))
@@ -38,7 +38,7 @@ bool SHALoader::loadFile()
     return true;
 }
 
-bool SHALoader::parse()
+bool SHAModel::parse()
 {
     LineType state = LineType::Null;
     QStringList elementParams;
@@ -113,7 +113,7 @@ bool SHALoader::parse()
     return true;
 }
 
-SHALoader::LineType SHALoader::getTypeLine(const QString &line)
+SHAModel::LineType SHAModel::getTypeLine(const QString &line)
 {
     const QString &&trimmedLine = line.trimmed();
     auto checkPattern = [&trimmedLine](const QString &pattern) {
