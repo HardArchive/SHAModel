@@ -28,7 +28,7 @@ public:
     Q_ENUM(LineType)
 
 private:
-    QStringList m_fileContent;
+    QStringList m_content;
     QString m_filePath;
 
 private:
@@ -38,6 +38,7 @@ private:
 public:
     explicit SHAModel(const QString &filePath, QObject *parent = 0);
     bool loadSha();
+
 
 private:
     static QString findBlock(const QString &line, const QString &beginTok,
@@ -53,4 +54,6 @@ private:
 
     bool loadFile();
     bool parse();
+    QVariantMap parseHeader();
+    QStringList getElementBlock();
 };
