@@ -13,9 +13,9 @@ BEGIN_SDK
   Add(EditMulti,12490169,21,21)
   {
    WorkCount=1
-   link(doWork1,11435147:doMessage,[(73,27)(73,146)])
+   link(doWork1,11435147:doMessage,[(73,27)(73,139)])
   }
-  Add(Message,11435147,126,140)
+  Add(Message,11435147,126,133)
   {
    Message="ew"
    Point(doType)
