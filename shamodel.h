@@ -3,11 +3,13 @@
 #include <QObject>
 #include <QVector>
 
-class SHAModel : public QObject {
+class SHAModel : public QObject
+{
 	Q_OBJECT
 
 public:
-	enum LineType {
+	enum LineType
+	{
 		Null,
 		Undefined,
 		Ignore,
@@ -23,8 +25,8 @@ public:
 		END_SDK,
 		Empty
 	};
-	Q_ENUM(LineType)
 
+	Q_ENUM(LineType)
 
 private:
 	QStringList m_fileContent;
@@ -35,16 +37,16 @@ private:
 	QString m_version;
 
 public:
-	explicit SHAModel(const QString &filePath, QObject *parent = 0);
+	explicit SHAModel(const QString& filePath, QObject* parent = 0);
 	bool loadSha();
 
 private:
-	static QString findBlock(const QString &line, const QString &beginTok, const QString &endTok);
-	static QStringList findMultiBlock(QString &str, const QString &beginTok,
-		const QString &endTok, bool cutBlock = false,
+	static QString findBlock(const QString& line, const QString& beginTok, const QString& endTok);
+	static QStringList findMultiBlock(QString& str, const QString& beginTok,
+		const QString& endTok, bool cutBlock = false,
 		bool removeTok = false);
-	static void getLinkParams(const QString &line);
-	static LineType getTypeLine(const QString &line);
+	static bool getLinkParams(const QString & line, QString & _thisPoint, QString & _targetPoint, qint32 & _targetId, QStringList & _nodes);
+	static LineType getTypeLine(const QString& line);
 
 	bool loadFile();
 	bool parse();

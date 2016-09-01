@@ -2,7 +2,9 @@ Make(delphi)
 ver(4.05 build 186)
 Add(MainForm,2953706,21,105)
 {
- link(onCreate,8430021:doWork1,[])
+ link(onActivate,12046659:doWork1,[(81,111)])
+ link(onDeactivate,12046659:doWork2,[])
+ link(onCreate,11085344:doWork2,[])
 }
 Add(MultiElement,8430021,105,119)
 {
@@ -19,3 +21,12 @@ BEGIN_SDK
    Point(doType)
   }
 END_SDK
+Add(HubEx,11085344,77,119)
+{
+ link(onEvent,8430021:doWork1,[])
+}
+Add(HubEx,12046659,77,112)
+{
+ Angle=1
+ link(onEvent,11085344:doWork1,[])
+}

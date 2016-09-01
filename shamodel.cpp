@@ -4,10 +4,13 @@
 #include <QRegExp>
 #include <QStringList>
 
-SHAModel::SHAModel(const QString &filePath, QObject *parent)
-	: QObject(parent), m_filePath(filePath) {}
+SHAModel::SHAModel(const QString& filePath, QObject* parent)
+	: QObject(parent), m_filePath(filePath)
+{
+}
 
-bool SHAModel::loadSha() {
+bool SHAModel::loadSha()
+{
 	if (!loadFile()) return false;
 
 	if (!parse()) return false;
@@ -15,7 +18,8 @@ bool SHAModel::loadSha() {
 	return true;
 }
 
-QString SHAModel::findBlock(const QString &line, const QString &beginTok, const QString &endTok) {
+QString SHAModel::findBlock(const QString& line, const QString& beginTok, const QString& endTok)
+{
 	const qint32 beginTokLen = beginTok.length();
 	const auto begin = line.indexOf(beginTok);
 	const auto end = line.lastIndexOf(endTok);
@@ -23,12 +27,14 @@ QString SHAModel::findBlock(const QString &line, const QString &beginTok, const 
 	return line.mid(begin + beginTokLen, count - beginTokLen);
 }
 
-QStringList SHAModel::findMultiBlock(QString &str, const QString &beginTok, const QString &endTok, bool cutBlock, bool removeTok) {
+QStringList SHAModel::findMultiBlock(QString& str, const QString& beginTok, const QString& endTok, bool cutBlock, bool removeTok)
+{
 	qint32 index = 0;
 	QStringList list;
 	if (str.isEmpty()) return list;
 
-	while (true) {
+	while (true)
+	{
 		int beginTokLen = beginTok.length();
 		int endTokLen = endTok.length();
 		auto begin = str.indexOf(beginTok, index);
@@ -39,8 +45,10 @@ QStringList SHAModel::findMultiBlock(QString &str, const QString &beginTok, cons
 
 		qint32 count = end - begin;
 		list << str.mid(begin + beginTokLen, count - beginTokLen);
-		if (cutBlock) {
-			if (removeTok) {
+		if (cutBlock)
+		{
+			if (removeTok)
+			{
 				str = str.remove(begin, count + beginTokLen);
 				index = end - count;
 			}
@@ -49,7 +57,8 @@ QStringList SHAModel::findMultiBlock(QString &str, const QString &beginTok, cons
 				index = end - count + beginTokLen + endTokLen;
 			}
 		}
-		else {
+		else
+		{
 			index = end + endTokLen;
 		}
 	}
@@ -57,34 +66,39 @@ QStringList SHAModel::findMultiBlock(QString &str, const QString &beginTok, cons
 	return list;
 }
 
-void SHAModel::getLinkParams(const QString &line)
+bool SHAModel::getLinkParams(const QString& line, QString& thisPoint, QString& targetPoint, qint32& targetId, QStringList &nodes)
 {
 	QStringList res;
 	const QString link = findBlock(line, "link(", ")");
-	const QStringList blocks = link.split(':');
-	const QString block1 = blocks.at(0);
-	QString block2 = blocks.at(1);
+	const QStringList blockList = link.split(':');
+	if (blockList.size() < 2)
+		return false;
 
-	const QStringList block1List = block1.split(',');
 
-	const QStringList block22List = findMultiBlock(block2, "(", ")");
-	
-	
+	//Block1
+	const QStringList block1List = blockList.at(0).split(',');
+	if (block1List.size() < 2)
+		return false;
 
-	// const QString thisPoint = block1List.at(0);
-	// const qint32 targetId = block1List.at(1).toInt();
-	// const QString targetPoint = block2List.at(0);
-	// const QString nodes = block2List.at(1);
+	thisPoint = block1List.at(0);
+	targetId = block1List.at(1).toInt();
 
-	if (blocks.size() < 4) {
-		return;
-	}
+	//Block2
+	QString block2 = blockList.at(1);
+	nodes = findMultiBlock(block2, "(", ")", true, true);
+	const QStringList block2list = block2.split(',');
+	if (block2list.empty())
+		return false;
+	targetPoint = block2list.at(0);
+
+	return true;
 }
 
-SHAModel::LineType SHAModel::getTypeLine(const QString &line)
+SHAModel::LineType SHAModel::getTypeLine(const QString& line)
 {
-	const QString &&trimmedLine = line.trimmed();
-	auto checkPattern = [&trimmedLine](const QString &pattern) {
+	const QString&& trimmedLine = line.trimmed();
+	auto checkPattern = [&trimmedLine](const QString& pattern)
+	{
 		return QRegExp(pattern, Qt::CaseSensitive, QRegExp::WildcardUnix)
 			.exactMatch(trimmedLine);
 	};
@@ -115,7 +129,8 @@ SHAModel::LineType SHAModel::getTypeLine(const QString &line)
 	return LineType::Undefined;
 }
 
-bool SHAModel::loadFile() {
+bool SHAModel::loadFile()
+{
 	QFile file(m_filePath);
 	if (!file.open(QIODevice::ReadOnly)) return false;
 
@@ -123,7 +138,8 @@ bool SHAModel::loadFile() {
 	return true;
 }
 
-bool SHAModel::parse() {
+bool SHAModel::parse()
+{
 	LineType state = LineType::Null;
 	bool openBlock = false;
 
@@ -131,12 +147,15 @@ bool SHAModel::parse() {
 	QVariantList elementList;
 	QVariantMap element;
 	QVariantMap container;
+	QVariantList links;
 
-	for (const QString v : m_fileContent) {
-		const QString &&line = v.trimmed();
+	for (const QString v : m_fileContent)
+	{
+		const QString&& line = v.trimmed();
 		LineType type = getTypeLine(line);
 
-		switch (type) {
+		switch (type)
+		{
 		case LineType::Undefined:
 			qInfo() << "String:" << line;
 			qInfo() << "File:" << m_filePath;
@@ -150,13 +169,16 @@ bool SHAModel::parse() {
 			data.insert("version", findBlock(line, "ver(", ")"));
 			continue;
 
-		case LineType::Add: {
-			if (openBlock == true) {
+		case LineType::Add:
+		{
+			if (openBlock == true)
+			{
 				qWarning() << "Отсутствует фигурная скобка \"}\" закрывающая блок!";
 				return false;
 			}
 			QStringList params = findBlock(line, "Add(", ")").split(',');
-			if (params.size() < 4) {
+			if (params.size() < 4)
+			{
 				qWarning() << "К-во аргументов меньше 4-х.";
 				return false;
 			}
@@ -174,10 +196,14 @@ bool SHAModel::parse() {
 		default: break;
 		}
 
-		switch (state) {
-		case LineType::Add: {
-			if (openBlock == false) {
-				if (type == LineType::OpenBlock) {
+		switch (state)
+		{
+		case LineType::Add:
+		{
+			if (openBlock == false)
+			{
+				if (type == LineType::OpenBlock)
+				{
 					openBlock = true;
 					continue;
 				}
@@ -188,15 +214,30 @@ bool SHAModel::parse() {
 			}
 			//Начало OpenBlock
 			// http://www.jsoneditoronline.org/?id=6c2b44125a2456164e333cf59f300fac
-			switch (type) {
-			case LineType::Link: {
-				QVariantMap map;
+			//
+			switch (type)
+			{
+			case LineType::Link:
+			{
+				QString thisPoint;
+				QString targetPoint;
+				qint32 targetId;
+				QStringList nodes;
 
-				getLinkParams(line);
-				// element.insertMulti("link", );
+				if (!getLinkParams(line, thisPoint, targetPoint, targetId, nodes))
+				{
+					qWarning() << "Ошибка разбора параметров link(*)";
+					return false;
+				}
+				QVariantMap map;
+				map.insert("thisPoint", thisPoint);
+				map.insert("targetPoint", targetPoint);
+				map.insert("targetId", targetId);
+				if (!nodes.isEmpty())
+					map.insert("nodes", nodes);
+				links.append(map);
 
 				continue;
-				break;
 			}
 			case LineType::CloseBlock:
 				openBlock = false;
@@ -205,9 +246,11 @@ bool SHAModel::parse() {
 				break;
 			}
 		}
-		case LineType::BEGIN_SDK: {
+		case LineType::BEGIN_SDK:
+		{
 		}
-		case LineType::END_SDK: {
+		case LineType::END_SDK:
+		{
 		}
 		default: break;
 		}
