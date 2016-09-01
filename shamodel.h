@@ -4,44 +4,49 @@
 #include <QVector>
 
 class SHAModel : public QObject {
-    Q_OBJECT
+  Q_OBJECT
 
-public:
-    enum LineType {
-        Null,
-        Undefined,
-        Ignore,
-        Make,
-        Ver,
-        Add,
-        OpenBlock,
-        CloseBlock,
-        Link,
-        Point,
-        Prop,
-        BEGIN_SDK,
-        END_SDK,
-        Empty
-    };
-    Q_ENUM(LineType)
+ public:
+  enum LineType {
+    Null,
+    Undefined,
+    Ignore,
+    Make,
+    Ver,
+    Add,
+    OpenBlock,
+    CloseBlock,
+    Link,
+    Point,
+    Prop,
+    BEGIN_SDK,
+    END_SDK,
+    Empty
+  };
+  Q_ENUM(LineType)
 
-public:
-    explicit SHAModel(const QString &filePath, QObject *parent = 0);
+ public:
+  explicit SHAModel(const QString &filePath, QObject *parent = 0);
 
-public:
-    bool loadSha();
+ public:
+  bool loadSha();
 
-private:
-    QStringList m_fileContent;
-    QString m_filePath;
+ private:
+  QStringList m_fileContent;
+  QString m_filePath;
 
-private:
-    QString m_package;
-    QString m_version;
+ private:
+  QString m_package;
+  QString m_version;
 
-private:
-    QString getTokBlock(const QString &line, const QString &beginTok, const QString &endTok);
-    bool loadFile();
-    bool parse();
-    LineType getTypeLine(const QString &line);
+ private:
+  void getLinkParams(const QString &line);
+  QString getBlock(const QString &line, const QString &beginTok,
+                   const QString &endTok);
+  QStringList getMultiBlock(QString &str, const QString &beginTok,
+                            const QString &endTok, bool cutBlock = false,
+                            bool removeTok = false);
+  bool loadFile();
+  bool parse();
+  LineType getTypeLine(const QString &line);
 };

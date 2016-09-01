@@ -19,8 +19,3 @@ BEGIN_SDK
    Point(doType)
   }
 END_SDK
-Add(Button,9863537,105,175)
-{
- Left=105
- Top=175
-}
