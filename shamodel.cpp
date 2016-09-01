@@ -157,6 +157,7 @@ bool SHAModel::loadFile()
         return false;
 
     QStringList tmpContent = QString::fromLocal8Bit(file.readAll()).split("\r\n");
+    QStringList content;
     for (QString &s : tmpContent) {
         QString tmp = s.trimmed();
         if (!tmp.isEmpty())
@@ -166,10 +167,10 @@ bool SHAModel::loadFile()
     return true;
 }
 
-QVariantMap SHAModel::parseHeader()
+QVariantMap SHAModel::parseHeader(QStringList content)
 {
     QVariantMap header;
-    for (const QString line : m_content) {
+    for (const QString line : content) {
         switch (getTypeLine(line)) {
         case LineType::Make:
             header.insert("package", findBlock(line, "Make(", ")"));
@@ -189,12 +190,12 @@ QVariantMap SHAModel::parseHeader()
     return header;
 }
 
-QStringList SHAModel::getElementBlock()
+QStringList SHAModel::getElementBlock(QStringList content)
 {
     int index = 0;
-    int size = m_content.size();
+    int size = content.size();
     for (int i = 0; i < size; ++i) {
-        if (getTypeLine(m_content[i]) == LineType::Add) {
+        if (getTypeLine(content[i]) == LineType::Add) {
             index = i;
             break;
         }
@@ -203,10 +204,46 @@ QStringList SHAModel::getElementBlock()
     return m_content.mid(index);
 }
 
+struct Element {
+    QString name;
+    QList<Element> elements;
+};
+
+bool SHAModel::parseElementBlock(QStringList _block)
+{
+
+    QList<Element> eList;
+
+    Element e;
+
+    int size = _block.size();
+    for (int i = 0; i < size; ++i) {
+        const QString &line = _block[i];
+        const LineType type = getTypeLine(line);
+
+        switch (type) {
+        case LineType::Undefined:
+            return false;
+
+        case LineType::BEGIN_SDK:
+            continue;
+
+        case LineType::END_SDK:
+            continue;
+
+        case LineType::Ignore:
+            continue;
+
+        default:
+            continue;
+        }
+    }
+}
+
 bool SHAModel::parse()
 {
-    qInfo() << parseHeader();
-    qInfo() << getElementBlock();
+    qInfo() << parseHeader(m_content);
+    parseElementBlock(getElementBlock(m_content));
 
     /*
   LineType state = LineType::Null;

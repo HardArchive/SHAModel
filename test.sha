@@ -13,13 +13,23 @@ BEGIN_SDK
   Add(EditMulti,12490169,21,21)
   {
    WorkCount=1
-   link(doWork1,11435147:doMessage,[(73,27)(73,139)])
+   link(doWork1,11961254:doWork1,[(70,27)(70,97)])
   }
-  Add(Message,11435147,126,133)
+  Add(MultiElement,11961254,119,91)
   {
-   Message="ew"
-   Point(doType)
   }
+  BEGIN_SDK
+    Add(EditMulti,7486678,21,21)
+    {
+     WorkCount=1
+     link(doWork1,11435147:doMessage,[(87,27)(87,90)])
+    }
+    Add(Message,11435147,154,84)
+    {
+     Message="ew"
+     Point(doType)
+    }
+  END_SDK
 END_SDK
 Add(HubEx,11085344,77,119)
 {

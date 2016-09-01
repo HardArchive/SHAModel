@@ -39,7 +39,6 @@ public:
     explicit SHAModel(const QString &filePath, QObject *parent = 0);
     bool loadSha();
 
-
 private:
     static QString findBlock(const QString &line, const QString &beginTok,
                              const QString &endTok);
@@ -54,6 +53,7 @@ private:
 
     bool loadFile();
     bool parse();
-    QVariantMap parseHeader();
-    QStringList getElementBlock();
+    QVariantMap parseHeader(QStringList content);
+    QStringList getElementBlock(QStringList content);
+    bool parseElementBlock(QStringList _block);
 };
