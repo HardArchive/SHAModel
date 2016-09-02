@@ -29,6 +29,7 @@ public:
         Empty
     };
     Q_ENUM(LineType)
+    typedef QList<QStringList> ElementList;
 
 private:
     QStringList m_content;
@@ -54,5 +55,6 @@ private:
     LineType getTypeLine(int idx);
 
     bool loadFile();
+    ElementList splitContent(const QStringList &content);
     bool parse();
 };

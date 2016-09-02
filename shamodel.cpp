@@ -178,13 +178,73 @@ bool SHAModel::loadFile()
     return true;
 }
 
+SHAModel::ElementList SHAModel::splitContent(const QStringList &content)
+{
+    ElementList list;
+    int size = content.size();
+    for (int i = 0; i < size; ++i) {
+        const LineType type = getTypeLine(content[i]);
+
+        switch (type) {
+        case LineType::Undefined:
+            return ElementList();
+        case LineType::Add: {
+            int begin = i;
+
+            //Остальные параметры элемента
+            for (int idx = i + 1; idx < size; ++idx) {
+                switch (getTypeLine(idx)) {
+                case CloseBlock: {
+                    if (getTypeLine(idx + 1) == LineType::BEGIN_SDK) {
+                        int sdk = 0;
+                        for (int idxC = idx + 1; idxC < size; ++idxC) {
+                            LineType type = getTypeLine(idxC);
+                            if (type == LineType::BEGIN_SDK) {
+                                ++sdk;
+                            } else if (type == LineType::END_SDK) {
+                                --sdk;
+                                if (sdk == 0) {
+                                    list << content.mid(begin, idxC - begin + 1);
+                                    i = idxC;
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        list << content.mid(begin, idx - begin + 1);
+                        i = idx;
+                        break;
+                    }
+                }
+                default:
+                    continue;
+                }
+                break;
+            }
+        }
+        case LineType::Ignore:
+            continue;
+
+        default:
+            continue;
+        }
+    }
+
+    return list;
+}
+
 bool SHAModel::parse()
 {
+
+    splitContent(m_content);
+    /*
     QVariantMap data;
 
-    QStack<SHAContainer> stackContainer;
-    SHAContainer container = SHAContainer::create();
-    SHAElement element;
+    QStack<QVariantList> stackContainer;
+    QVariantList container;
+
+    QVariantMap element;
+    QVariantList links;
 
     const auto &content = m_content;
     int size = content.size();
@@ -207,13 +267,12 @@ bool SHAModel::parse()
                 qWarning() << "К-во аргументов меньше 4-х.";
                 return false;
             }
-            element = SHAElement::create();
 
             //Основные параметры элемента
-            element->name = params[0];
-            element->id = params[1].toInt();
-            element->x = params[2].toInt();
-            element->y = params[3].toInt();
+            element.insert("name", params[0]);
+            element.insert("id", params[1].toInt());
+            element.insert("x", params[2].toInt());
+            element.insert("y", params[3].toInt());
 
             //Остальные параметры элемента
             for (int idx = i + 1; idx < size; ++idx) {
@@ -226,7 +285,7 @@ bool SHAModel::parse()
                         qWarning() << "Ошибка разбора параметров link(*)";
                         return false;
                     }
-                    element->linkList.append(link);
+                    links.append(link);
                     continue;
                 }
                 case Point:
@@ -234,17 +293,17 @@ bool SHAModel::parse()
                 case Prop:
                     continue;
                 case CloseBlock: {
+                    if (!links.isEmpty()) {
+                        element.insert("links", links);
+                        links.clear();
+                    }
                     bool isContainer = (getTypeLine(idx + 1) == LineType::BEGIN_SDK);
                     if (isContainer) {
-                        container->append(element);
-                        stackContainer.append(container);
-                        container = SHAContainer::create();
-                        element->containerList.append(container);
-                        element.clear();
                     } else {
-                        container->append(element);
-                        element.clear();
                     }
+
+                    container.append(element);
+                    element.clear();
 
                     i = idx;
                     break;
@@ -264,6 +323,7 @@ bool SHAModel::parse()
     }
 
     return true;
+    */
 
     /*
   LineType state = LineType::Null;
