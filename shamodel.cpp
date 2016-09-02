@@ -178,6 +178,35 @@ bool SHAModel::loadFile()
     return true;
 }
 
+QStringList SHAModel::getElementBlock(const QStringList &content, int &begin)
+{
+    QStringList res;
+    int tmpBegin = begin;
+    int size = content.size();
+    for (int eBlock = begin + 1; eBlock < size; ++eBlock) {
+        if (getTypeLine(content, eBlock) == LineType::CloseBlock) {
+            if (getTypeLine(content, eBlock + 1) == LineType::BEGIN_SDK) {
+                int sdk = 0;
+                for (int cBlock = eBlock + 1; cBlock < size; ++cBlock) {
+                    LineType type = getTypeLine(content, cBlock);
+                    if (type == LineType::BEGIN_SDK) {
+                        ++sdk;
+                    } else if (type == LineType::END_SDK) {
+                        --sdk;
+                        if (sdk == 0) {
+                            begin = cBlock;
+                            return content.mid(tmpBegin, cBlock - tmpBegin + 1);
+                        }
+                    }
+                }
+            } else {
+                begin = eBlock;
+                return content.mid(tmpBegin, eBlock - tmpBegin + 1);
+            }
+        }
+    }
+}
+
 SHAModel::ElementList SHAModel::splitContent(const QStringList &content)
 {
     ElementList list;
@@ -189,38 +218,7 @@ SHAModel::ElementList SHAModel::splitContent(const QStringList &content)
         case LineType::Undefined:
             return ElementList();
         case LineType::Add: {
-            int begin = i;
-
-            //Остальные параметры элемента
-            for (int idx = i + 1; idx < size; ++idx) {
-                switch (getTypeLine(content, idx)) {
-                case CloseBlock: {
-                    if (getTypeLine(content, idx + 1) == LineType::BEGIN_SDK) {
-                        int sdk = 0;
-                        for (int idxC = idx + 1; idxC < size; ++idxC) {
-                            LineType type = getTypeLine(content, idxC);
-                            if (type == LineType::BEGIN_SDK) {
-                                ++sdk;
-                            } else if (type == LineType::END_SDK) {
-                                --sdk;
-                                if (sdk == 0) {
-                                    list << content.mid(begin, idxC - begin + 1);
-                                    i = idxC;
-                                    break;
-                                }
-                            }
-                        }
-                    } else {
-                        list << content.mid(begin, idx - begin + 1);
-                        i = idx;
-                    }
-                    break;
-                }
-                default:
-                    continue;
-                }
-                break;
-            }
+            list << getElementBlock(content, i);
         }
         case LineType::Ignore:
             continue;

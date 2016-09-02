@@ -1,5 +1,4 @@
 #pragma once
-#include "shastruct.h"
 #include <QObject>
 #include <QVector>
 #include <QSharedPointer>
@@ -55,6 +54,8 @@ private:
     static LineType getTypeLine(const QStringList &content, int idx);
 
     bool loadFile();
-    ElementList splitContent(const QStringList &content);
+    static QStringList getElementBlock(const QStringList &content, int &begin);
+    static QStringList countLineSDKBlock(const QStringList &content, int &begin);
+    static ElementList splitContent(const QStringList &content);
     bool parse();
 };
