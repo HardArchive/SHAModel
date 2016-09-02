@@ -233,27 +233,48 @@ bool SHAModel::parseElementBlock(QStringList block)
             return false;
 
         case LineType::Add: {
+            QStringList params = findBlock(block[i], "Add(", ")").split(',');
+            if (params.size() < 4) {
+                qWarning() << "К-во аргументов меньше 4-х.";
+                return false;
+            }
+
+            //Основные параметры элемента
+            element.insert("name", params[0]);
+            element.insert("id", params[1].toInt());
+            element.insert("x", params[2].toInt());
+            element.insert("y", params[3].toInt());
+
+            //Остальные параметры элемента
             for (int idx = i + 1; idx < size; ++idx) {
                 switch (getTypeLine(block, idx)) {
                 case OpenBlock:
                     continue;
                 case Link: {
                     const QVariantMap link = linkToVariantMap(block[idx]);
-
                     if (link.isEmpty()) {
                         qWarning() << "Ошибка разбора параметров link(*)";
                         return false;
                     }
-
-                    links.append(map);
+                    links.append(link);
                     continue;
                 }
                 case Point:
                     continue;
                 case Prop:
                     continue;
-                case CloseBlock:
-                    continue;
+                case CloseBlock: {
+                    if (!links.isEmpty()) {
+                        element.insert("links", links);
+                        links.clear();
+                    }
+                    elementList.append(element);
+                    element.clear();
+
+                    i = idx + 1;
+                    idx = size;
+                    break;
+                }
                 default:
                     break;
                 }
@@ -268,6 +289,8 @@ bool SHAModel::parseElementBlock(QStringList block)
             continue;
         }
     }
+
+    return true;
 }
 
 bool SHAModel::parse()
