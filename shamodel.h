@@ -47,11 +47,8 @@ private:
                                       bool removeTok = false);
     static QVariantMap linkToVariantMap(const QString &line);
     static LineType getTypeLine(const QString &line);
-    static LineType getTypeLine(const QStringList &block, int idx);
+    LineType getTypeLine(int idx);
 
     bool loadFile();
     bool parse();
-    QVariantMap parseHeader(QStringList content);
-    QStringList getElementBlock(QStringList content);
-    bool parseElementBlock(QStringList _block);
 };

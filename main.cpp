@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     setlocale(LC_ALL, "");
 
     QString examples = "D:/Users/Admin/AppData/Roaming/HiAsm_AltBuild/Elements/delphi/Example";
-    QString ex2 = "C:/dev/projects/SHALoader/test.sha";
+    QString ex2 = "D:/dev/Qt/MainProjects/SHALoader/test.sha";
 
     // auto list = loadFiles(examples, { "*.sha", "*.SHA" });
     //

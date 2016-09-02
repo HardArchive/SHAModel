@@ -152,13 +152,13 @@ SHAModel::LineType SHAModel::getTypeLine(const QString &line)
     return LineType::Undefined;
 }
 
-SHAModel::LineType SHAModel::getTypeLine(const QStringList &block, int idx)
+SHAModel::LineType SHAModel::getTypeLine(int idx)
 {
-    int size = block.size();
+    int size = m_content.size();
     if ((idx < 0) || (idx > (size - 1)))
         return LineType::Null;
 
-    return getTypeLine(block[idx]);
+    return getTypeLine(m_content[idx]);
 }
 
 bool SHAModel::loadFile()
@@ -178,44 +178,7 @@ bool SHAModel::loadFile()
     return true;
 }
 
-QVariantMap SHAModel::parseHeader(QStringList content)
-{
-    QVariantMap header;
-    for (const QString line : content) {
-        switch (getTypeLine(line)) {
-        case LineType::Make:
-            header.insert("package", findBlock(line, "Make(", ")"));
-            continue;
-
-        case LineType::Ver:
-            header.insert("version", findBlock(line, "ver(", ")"));
-            continue;
-        case LineType::Ignore:
-            continue;
-
-        default:
-            return header;
-        }
-    }
-
-    return header;
-}
-
-QStringList SHAModel::getElementBlock(QStringList content)
-{
-    int index = 0;
-    int size = content.size();
-    for (int i = 0; i < size; ++i) {
-        if (getTypeLine(content[i]) == LineType::Add) {
-            index = i;
-            break;
-        }
-    }
-
-    return m_content.mid(index);
-}
-
-bool SHAModel::parseElementBlock(QStringList block)
+bool SHAModel::parse()
 {
     QVariantMap data;
     QVariantList elementList;
@@ -223,17 +186,24 @@ bool SHAModel::parseElementBlock(QStringList block)
     QVariantMap element;
     QVariantMap container;
     QVariantList links;
+    const auto &content = m_content;
 
-    int size = block.size();
+    int size = content.size();
     for (int i = 0; i < size; ++i) {
-        const LineType type = getTypeLine(block[i]);
+        const LineType type = getTypeLine(content[i]);
 
         switch (type) {
         case LineType::Undefined:
             return false;
+        case LineType::Make:
+            data.insert("package", findBlock(content[i], "Make(", ")"));
+            continue;
+        case LineType::Ver:
+            data.insert("version", findBlock(content[i], "ver(", ")"));
+            continue;
 
         case LineType::Add: {
-            QStringList params = findBlock(block[i], "Add(", ")").split(',');
+            QStringList params = findBlock(content[i], "Add(", ")").split(',');
             if (params.size() < 4) {
                 qWarning() << "К-во аргументов меньше 4-х.";
                 return false;
@@ -247,11 +217,11 @@ bool SHAModel::parseElementBlock(QStringList block)
 
             //Остальные параметры элемента
             for (int idx = i + 1; idx < size; ++idx) {
-                switch (getTypeLine(block, idx)) {
+                switch (getTypeLine(idx)) {
                 case OpenBlock:
                     continue;
                 case Link: {
-                    const QVariantMap link = linkToVariantMap(block[idx]);
+                    const QVariantMap link = linkToVariantMap(content[idx]);
                     if (link.isEmpty()) {
                         qWarning() << "Ошибка разбора параметров link(*)";
                         return false;
@@ -264,6 +234,8 @@ bool SHAModel::parseElementBlock(QStringList block)
                 case Prop:
                     continue;
                 case CloseBlock: {
+                    bool isContainer = (getTypeLine(idx - 1) == LineType::END_SDK);
+
                     if (!links.isEmpty()) {
                         element.insert("links", links);
                         links.clear();
@@ -271,16 +243,14 @@ bool SHAModel::parseElementBlock(QStringList block)
                     elementList.append(element);
                     element.clear();
 
-                    i = idx + 1;
-                    idx = size;
+                    i = idx;
                     break;
                 }
                 default:
                     break;
                 }
+                break;
             }
-
-            continue;
         }
         case LineType::Ignore:
             continue;
@@ -291,12 +261,6 @@ bool SHAModel::parseElementBlock(QStringList block)
     }
 
     return true;
-}
-
-bool SHAModel::parse()
-{
-    qInfo() << parseHeader(m_content);
-    parseElementBlock(getElementBlock(m_content));
 
     /*
   LineType state = LineType::Null;
@@ -413,5 +377,4 @@ bool SHAModel::parse()
     }
   }
 */
-    return true;
 }
