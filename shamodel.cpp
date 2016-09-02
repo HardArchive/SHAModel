@@ -215,7 +215,7 @@ QStringList SHAModel::getElementBlock(QStringList content)
     return m_content.mid(index);
 }
 
-bool SHAModel::parseElementBlock(QStringList _block)
+bool SHAModel::parseElementBlock(QStringList block)
 {
     QVariantMap data;
     QVariantList elementList;
@@ -224,9 +224,9 @@ bool SHAModel::parseElementBlock(QStringList _block)
     QVariantMap container;
     QVariantList links;
 
-    int size = _block.size();
+    int size = block.size();
     for (int i = 0; i < size; ++i) {
-        const LineType type = getTypeLine(_block[i]);
+        const LineType type = getTypeLine(block[i]);
 
         switch (type) {
         case LineType::Undefined:
@@ -234,18 +234,18 @@ bool SHAModel::parseElementBlock(QStringList _block)
 
         case LineType::Add: {
             for (int idx = i + 1; idx < size; ++idx) {
-                switch (getTypeLine(_block, idx)) {
+                switch (getTypeLine(block, idx)) {
                 case OpenBlock:
                     continue;
                 case Link: {
-                    QVariantMap link = linkToVariantMap(_block[idx]);
+                    const QVariantMap link = linkToVariantMap(block[idx]);
 
                     if (link.isEmpty()) {
                         qWarning() << "Ошибка разбора параметров link(*)";
                         return false;
                     }
 
-                    //links.append(map);
+                    links.append(map);
                     continue;
                 }
                 case Point:
