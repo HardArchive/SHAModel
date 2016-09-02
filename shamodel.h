@@ -24,7 +24,7 @@ public:
         END_SDK,
         Empty
     };
-    //Q_ENUM(LineType)
+    Q_ENUM(LineType)
 
 private:
     QStringList m_content;
@@ -45,9 +45,7 @@ private:
                                       const QString &endTok,
                                       bool cutBlock = false,
                                       bool removeTok = false);
-    static bool getLinkParams(const QString &line, QString &_thisPoint,
-                              QString &_targetPoint, qint32 &_targetId,
-                              QStringList &_nodes);
+    static QVariantMap linkToVariantMap(const QString &line);
     static LineType getTypeLine(const QString &line);
     static LineType getTypeLine(const QStringList &block, int idx);
 

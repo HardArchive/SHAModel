@@ -69,33 +69,35 @@ QStringList SHAModel::findMultiBlock(QString &str, const QString &beginTok,
     return list;
 }
 
-bool SHAModel::getLinkParams(const QString &line, QString &thisPoint,
-                             QString &targetPoint, qint32 &targetId,
-                             QStringList &nodes)
+QVariantMap SHAModel::linkToVariantMap(const QString &line)
 {
+    QVariantMap map;
     QStringList res;
     const QString link = findBlock(line, "link(", ")");
     const QStringList blockList = link.split(':');
     if (blockList.size() < 2)
-        return false;
+        return QVariantMap();
 
     // Block1
     const QStringList block1List = blockList.at(0).split(',');
     if (block1List.size() < 2)
-        return false;
-
-    thisPoint = block1List.at(0);
-    targetId = block1List.at(1).toInt();
+        return QVariantMap();
 
     // Block2
     QString block2 = blockList.at(1);
-    nodes = findMultiBlock(block2, "(", ")", true, true);
+    const QStringList nodes = findMultiBlock(block2, "(", ")", true, true);
     const QStringList block2list = block2.split(',');
     if (block2list.empty())
-        return false;
-    targetPoint = block2list.at(0);
+        return QVariantMap();
 
-    return true;
+    map.insert("thisPoint", block1List.at(0));
+    map.insert("targetId", block1List.at(1).toInt());
+    map.insert("targetPoint", block2list.at(0));
+
+    if (!nodes.isEmpty())
+        map.insert("nodes", nodes);
+
+    return map;
 }
 
 SHAModel::LineType SHAModel::getTypeLine(const QString &line)
@@ -215,11 +217,16 @@ QStringList SHAModel::getElementBlock(QStringList content)
 
 bool SHAModel::parseElementBlock(QStringList _block)
 {
+    QVariantMap data;
+    QVariantList elementList;
+
+    QVariantMap element;
+    QVariantMap container;
+    QVariantList links;
 
     int size = _block.size();
     for (int i = 0; i < size; ++i) {
-        const QString line = _block[i];
-        const LineType type = getTypeLine(line);
+        const LineType type = getTypeLine(_block[i]);
 
         switch (type) {
         case LineType::Undefined:
@@ -230,8 +237,17 @@ bool SHAModel::parseElementBlock(QStringList _block)
                 switch (getTypeLine(_block, idx)) {
                 case OpenBlock:
                     continue;
-                case Link:
+                case Link: {
+                    QVariantMap link = linkToVariantMap(_block[idx]);
+
+                    if (link.isEmpty()) {
+                        qWarning() << "Ошибка разбора параметров link(*)";
+                        return false;
+                    }
+
+                    //links.append(map);
                     continue;
+                }
                 case Point:
                     continue;
                 case Prop:
