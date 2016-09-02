@@ -213,8 +213,8 @@ SHAModel::ElementList SHAModel::splitContent(const QStringList &content)
                     } else {
                         list << content.mid(begin, idx - begin + 1);
                         i = idx;
-                        break;
                     }
+                    break;
                 }
                 default:
                     continue;
