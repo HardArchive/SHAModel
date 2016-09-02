@@ -178,92 +178,20 @@ bool SHAModel::loadFile()
     return true;
 }
 
-QStringList SHAModel::getElementBlock(const QStringList &content, int &begin)
+QVariantMap SHAModel::parseElementBlock(const QStringList &block)
 {
-    QStringList res;
-    int tmpBegin = begin;
-    int size = content.size();
-    for (int eBlock = begin + 1; eBlock < size; ++eBlock) {
-        if (getTypeLine(content, eBlock) == LineType::CloseBlock) {
-            if (getTypeLine(content, eBlock + 1) == LineType::BEGIN_SDK) {
-                int sdk = 0;
-                for (int cBlock = eBlock + 1; cBlock < size; ++cBlock) {
-                    LineType type = getTypeLine(content, cBlock);
-                    if (type == LineType::BEGIN_SDK) {
-                        ++sdk;
-                    } else if (type == LineType::END_SDK) {
-                        --sdk;
-                        if (sdk == 0) {
-                            begin = cBlock;
-                            return content.mid(tmpBegin, cBlock - tmpBegin + 1);
-                        }
-                    }
-                }
-            } else {
-                begin = eBlock;
-                return content.mid(tmpBegin, eBlock - tmpBegin + 1);
-            }
-        }
-    }
-}
-
-SHAModel::ElementList SHAModel::splitContent(const QStringList &content)
-{
-    ElementList list;
-    int size = content.size();
-    for (int i = 0; i < size; ++i) {
-        const LineType type = getTypeLine(content[i]);
-
-        switch (type) {
-        case LineType::Undefined:
-            return ElementList();
-        case LineType::Add: {
-            list << getElementBlock(content, i);
-        }
-        case LineType::Ignore:
-            continue;
-
-        default:
-            continue;
-        }
-    }
-
-    return list;
-}
-
-bool SHAModel::parse()
-{
-
-    splitContent(m_content);
-    /*
-    QVariantMap data;
-
-    QStack<QVariantList> stackContainer;
-    QVariantList container;
-
     QVariantMap element;
-    QVariantList links;
-
-    const auto &content = m_content;
-    int size = content.size();
-    for (int i = 0; i < size; ++i) {
-        const LineType type = getTypeLine(content[i]);
+    QVariantList linkList;
+    const int size = block.size();
+    for (int iEBlock = 0; iEBlock < size; ++iEBlock) {
+        const LineType type = getTypeLine(block, iEBlock);
 
         switch (type) {
-        case LineType::Undefined:
-            return false;
-        case LineType::Make:
-            data.insert("package", findBlock(content[i], "Make(", ")"));
-            continue;
-        case LineType::Ver:
-            data.insert("version", findBlock(content[i], "ver(", ")"));
-            continue;
-
         case LineType::Add: {
-            QStringList params = findBlock(content[i], "Add(", ")").split(',');
+            QStringList params = findBlock(block[iEBlock], "Add(", ")").split(',');
             if (params.size() < 4) {
                 qWarning() << "К-во аргументов меньше 4-х.";
-                return false;
+                return QVariantMap();
             }
 
             //Основные параметры элемента
@@ -273,17 +201,17 @@ bool SHAModel::parse()
             element.insert("y", params[3].toInt());
 
             //Остальные параметры элемента
-            for (int idx = i + 1; idx < size; ++idx) {
-                switch (getTypeLine(idx)) {
+            for (int iEParam = iEBlock + 1; iEParam < size; ++iEParam) {
+                switch (getTypeLine(block, iEParam)) {
                 case OpenBlock:
                     continue;
                 case Link: {
-                    const QVariantMap link = linkToVariantMap(content[idx]);
+                    const QVariantMap link = linkToVariantMap(block[iEParam]);
                     if (link.isEmpty()) {
                         qWarning() << "Ошибка разбора параметров link(*)";
-                        return false;
+                        return QVariantMap();
                     }
-                    links.append(link);
+                    linkList.append(link);
                     continue;
                 }
                 case Point:
@@ -291,20 +219,15 @@ bool SHAModel::parse()
                 case Prop:
                     continue;
                 case CloseBlock: {
-                    if (!links.isEmpty()) {
-                        element.insert("links", links);
-                        links.clear();
-                    }
-                    bool isContainer = (getTypeLine(idx + 1) == LineType::BEGIN_SDK);
-                    if (isContainer) {
-                    } else {
+                    if (!linkList.isEmpty())
+                        element.insert("linkList", linkList);
+
+                    if (getTypeLine(block, iEParam + 1) == LineType::BEGIN_SDK) {
+                        const auto container = splitContent(block.mid(iEParam + 2, size - iEParam - 2 - 1));
+                        element.insert("container", container);
                     }
 
-                    container.append(element);
-                    element.clear();
-
-                    i = idx;
-                    break;
+                    return element;
                 }
                 default:
                     break;
@@ -319,123 +242,65 @@ bool SHAModel::parse()
             continue;
         }
     }
+    return element;
+}
 
-    return true;
-    */
-
-    /*
-  LineType state = LineType::Null;
-  bool openBlock = false;
-
-  QVariantMap data;
-  QVariantList elementList;
-
-  QVariantMap element;
-  QVariantMap container;
-  QVariantList links;
-
-  for (const QString v : m_fileContent) {
-    const QString line = v.trimmed();
-    LineType type = getTypeLine(line);
-
-    switch (type) {
-      case LineType::Undefined:
-        qInfo() << "String:" << line;
-        qInfo() << "File:" << m_filePath;
-
-        return false;
-      case LineType::Make:
-        data.insert("package", findBlock(line, "Make(", ")"));
-        continue;
-
-      case LineType::Ver:
-        data.insert("version", findBlock(line, "ver(", ")"));
-        continue;
-
-      case LineType::Add: {
-        if (openBlock == true) {
-          qWarning() << "Отсутствует фигурная скобка \"}\" закрывающая
-  блок!";
-          return false;
+QVariantMap SHAModel::getElementBlock(const QStringList &content, int &begin)
+{
+    int tmpBegin = begin;
+    int size = content.size();
+    for (int eBlock = begin + 1; eBlock < size; ++eBlock) {
+        if (getTypeLine(content, eBlock) == LineType::CloseBlock) {
+            if (getTypeLine(content, eBlock + 1) == LineType::BEGIN_SDK) {
+                int sdk = 0;
+                for (int cBlock = eBlock + 1; cBlock < size; ++cBlock) {
+                    LineType type = getTypeLine(content, cBlock);
+                    if (type == LineType::BEGIN_SDK) {
+                        ++sdk;
+                    } else if (type == LineType::END_SDK) {
+                        --sdk;
+                        if (sdk == 0) {
+                            begin = cBlock;
+                            return parseElementBlock(content.mid(tmpBegin, cBlock - tmpBegin + 1));
+                        }
+                    }
+                }
+            } else {
+                begin = eBlock;
+                return parseElementBlock(content.mid(tmpBegin, eBlock - tmpBegin + 1));
+            }
         }
-        QStringList params = findBlock(line, "Add(", ")").split(',');
-        if (params.size() < 4) {
-          qWarning() << "К-во аргументов меньше 4-х.";
-          return false;
-        }
-        //Инициализация
-        element.insert("name", params[0]);
-        element.insert("id", params[1].toInt());
-        element.insert("x", params[2].toInt());
-        element.insert("y", params[3].toInt());
-
-        state = LineType::Add;
-        continue;
-      }
-      case LineType::Ignore:
-        continue;
-      default:
-        break;
     }
+    return QVariantMap();
+}
 
-    switch (state) {
-      case LineType::Add: {
-        if (openBlock == false) {
-          if (type == LineType::OpenBlock) {
-            openBlock = true;
-            continue;
-          } else {
-            qWarning() << "Отсутствует фигурная скобка \"{\" открывающая
-  блок!";
-            return false;
-          }
-        }
-        //Начало OpenBlock
-        //
-  http://www.jsoneditoronline.org/?id=6c2b44125a2456164e333cf59f300fac
-        //
+QVariantList SHAModel::splitContent(const QStringList &content)
+{
+    QVariantList elementList;
+    int size = content.size();
+    for (int i = 0; i < size; ++i) {
+        const LineType type = getTypeLine(content[i]);
+
         switch (type) {
-          case LineType::Link: {
-            QString thisPoint;
-            QString targetPoint;
-            qint32 targetId;
-            QStringList nodes;
-
-            if (!getLinkParams(line, thisPoint, targetPoint, targetId,
-  nodes)) {
-              qWarning() << "Ошибка разбора параметров link(*)";
-              return false;
-            }
-            QVariantMap map;
-            map.insert("thisPoint", thisPoint);
-            map.insert("targetPoint", targetPoint);
-            map.insert("targetId", targetId);
-            if (!nodes.isEmpty()) map.insert("nodes", nodes);
-            links.append(map);
-
+        case LineType::Undefined:
+            return QVariantList();
+        case LineType::Add: {
+            elementList << getElementBlock(content, i);
+        }
+        case LineType::Ignore:
             continue;
-          }
-          case LineType::CloseBlock:
-            openBlock = false;
-            state = LineType::Null;
 
-            if (!links.isEmpty()) {
-              element.insert("links", links);
-              links.clear();
-            }
-            elementList.append(element);
-            element.clear();
-
+        default:
             continue;
         }
-      }
-      case LineType::BEGIN_SDK: {
-      }
-      case LineType::END_SDK: {
-      }
-      default:
-        break;
     }
-  }
-*/
+
+    return elementList;
+}
+
+bool SHAModel::parse()
+{
+
+    QVariantList list = splitContent(m_content);
+    return true;
 }

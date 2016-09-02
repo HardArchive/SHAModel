@@ -54,8 +54,8 @@ private:
     static LineType getTypeLine(const QStringList &content, int idx);
 
     bool loadFile();
-    static QStringList getElementBlock(const QStringList &content, int &begin);
-    static QStringList countLineSDKBlock(const QStringList &content, int &begin);
-    static ElementList splitContent(const QStringList &content);
+    static QVariantMap parseElementBlock(const QStringList &block);
+    static QVariantMap getElementBlock(const QStringList &content, int &begin);
+    static QVariantList splitContent(const QStringList &content);
     bool parse();
 };
