@@ -1,7 +1,11 @@
 #pragma once
-
+#include "shastruct.h"
 #include <QObject>
 #include <QVector>
+#include <QSharedPointer>
+#include <QVariantMap>
+#include <QVariantList>
+#include <QStack>
 
 class SHAModel : public QObject
 {

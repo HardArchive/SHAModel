@@ -13,4 +13,5 @@ SOURCES += main.cpp \
     shamodel.cpp
 
 HEADERS += \
-    shamodel.h
+    shamodel.h \
+    shastruct.h

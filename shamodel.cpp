@@ -181,13 +181,12 @@ bool SHAModel::loadFile()
 bool SHAModel::parse()
 {
     QVariantMap data;
-    QVariantList elementList;
 
-    QVariantMap element;
-    QVariantMap container;
-    QVariantList links;
+    QStack<SHAContainer> stackContainer;
+    SHAContainer container = SHAContainer::create();
+    SHAElement element;
+
     const auto &content = m_content;
-
     int size = content.size();
     for (int i = 0; i < size; ++i) {
         const LineType type = getTypeLine(content[i]);
@@ -208,12 +207,13 @@ bool SHAModel::parse()
                 qWarning() << "К-во аргументов меньше 4-х.";
                 return false;
             }
+            element = SHAElement::create();
 
             //Основные параметры элемента
-            element.insert("name", params[0]);
-            element.insert("id", params[1].toInt());
-            element.insert("x", params[2].toInt());
-            element.insert("y", params[3].toInt());
+            element->name = params[0];
+            element->id = params[1].toInt();
+            element->x = params[2].toInt();
+            element->y = params[3].toInt();
 
             //Остальные параметры элемента
             for (int idx = i + 1; idx < size; ++idx) {
@@ -226,7 +226,7 @@ bool SHAModel::parse()
                         qWarning() << "Ошибка разбора параметров link(*)";
                         return false;
                     }
-                    links.append(link);
+                    element->linkList.append(link);
                     continue;
                 }
                 case Point:
@@ -234,14 +234,17 @@ bool SHAModel::parse()
                 case Prop:
                     continue;
                 case CloseBlock: {
-                    bool isContainer = (getTypeLine(idx - 1) == LineType::END_SDK);
-
-                    if (!links.isEmpty()) {
-                        element.insert("links", links);
-                        links.clear();
+                    bool isContainer = (getTypeLine(idx + 1) == LineType::BEGIN_SDK);
+                    if (isContainer) {
+                        container->append(element);
+                        stackContainer.append(container);
+                        container = SHAContainer::create();
+                        element->containerList.append(container);
+                        element.clear();
+                    } else {
+                        container->append(element);
+                        element.clear();
                     }
-                    elementList.append(element);
-                    element.clear();
 
                     i = idx;
                     break;
