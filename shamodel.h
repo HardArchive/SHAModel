@@ -52,7 +52,7 @@ private:
                                       bool removeTok = false);
     static QVariantMap linkToVariantMap(const QString &line);
     static LineType getTypeLine(const QString &line);
-    LineType getTypeLine(int idx);
+    static LineType getTypeLine(const QStringList &content, int idx);
 
     bool loadFile();
     ElementList splitContent(const QStringList &content);

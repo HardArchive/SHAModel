@@ -152,13 +152,13 @@ SHAModel::LineType SHAModel::getTypeLine(const QString &line)
     return LineType::Undefined;
 }
 
-SHAModel::LineType SHAModel::getTypeLine(int idx)
+SHAModel::LineType SHAModel::getTypeLine(const QStringList &content, int idx)
 {
-    int size = m_content.size();
+    int size = content.size();
     if ((idx < 0) || (idx > (size - 1)))
         return LineType::Null;
 
-    return getTypeLine(m_content[idx]);
+    return getTypeLine(content[idx]);
 }
 
 bool SHAModel::loadFile()
@@ -193,12 +193,12 @@ SHAModel::ElementList SHAModel::splitContent(const QStringList &content)
 
             //Остальные параметры элемента
             for (int idx = i + 1; idx < size; ++idx) {
-                switch (getTypeLine(idx)) {
+                switch (getTypeLine(content, idx)) {
                 case CloseBlock: {
-                    if (getTypeLine(idx + 1) == LineType::BEGIN_SDK) {
+                    if (getTypeLine(content, idx + 1) == LineType::BEGIN_SDK) {
                         int sdk = 0;
                         for (int idxC = idx + 1; idxC < size; ++idxC) {
-                            LineType type = getTypeLine(idxC);
+                            LineType type = getTypeLine(content, idxC);
                             if (type == LineType::BEGIN_SDK) {
                                 ++sdk;
                             } else if (type == LineType::END_SDK) {
