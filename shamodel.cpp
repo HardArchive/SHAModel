@@ -222,8 +222,9 @@ QVariantMap SHAModel::parseElementBlock(const QStringList &block)
                     if (!linkList.isEmpty())
                         element.insert("linkList", linkList);
 
+                    //Если элемент является контейнером
                     if (getTypeLine(block, iEParam + 1) == LineType::BEGIN_SDK) {
-                        const auto container = splitContent(block.mid(iEParam + 2, size - iEParam - 2 - 1));
+                        const auto container = parseContent(block.mid(iEParam + 2, size - iEParam - 2 - 1));
                         element.insert("container", container);
                     }
 
@@ -274,7 +275,7 @@ QVariantMap SHAModel::getElementBlock(const QStringList &content, int &begin)
     return QVariantMap();
 }
 
-QVariantList SHAModel::splitContent(const QStringList &content)
+QVariantList SHAModel::parseContent(const QStringList &content)
 {
     QVariantList elementList;
     int size = content.size();
@@ -301,6 +302,6 @@ QVariantList SHAModel::splitContent(const QStringList &content)
 bool SHAModel::parse()
 {
 
-    QVariantList list = splitContent(m_content);
+    QVariantList list = parseContent(m_content);
     return true;
 }
