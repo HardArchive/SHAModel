@@ -150,6 +150,15 @@ SHAModel::LineType SHAModel::getTypeLine(const QString &line)
     return LineType::Undefined;
 }
 
+SHAModel::LineType SHAModel::getTypeLine(const QStringList &block, int idx)
+{
+    int size = block.size();
+    if ((idx < 0) || (idx > (size - 1)))
+        return LineType::Null;
+
+    return getTypeLine(block[idx]);
+}
+
 bool SHAModel::loadFile()
 {
     QFile file(m_filePath);
@@ -204,33 +213,38 @@ QStringList SHAModel::getElementBlock(QStringList content)
     return m_content.mid(index);
 }
 
-struct Element {
-    QString name;
-    QList<Element> elements;
-};
-
 bool SHAModel::parseElementBlock(QStringList _block)
 {
 
-    QList<Element> eList;
-
-    Element e;
-
     int size = _block.size();
     for (int i = 0; i < size; ++i) {
-        const QString &line = _block[i];
+        const QString line = _block[i];
         const LineType type = getTypeLine(line);
 
         switch (type) {
         case LineType::Undefined:
             return false;
 
-        case LineType::BEGIN_SDK:
-            continue;
+        case LineType::Add: {
+            for (int idx = i + 1; idx < size; ++idx) {
+                switch (getTypeLine(_block, idx)) {
+                case OpenBlock:
+                    continue;
+                case Link:
+                    continue;
+                case Point:
+                    continue;
+                case Prop:
+                    continue;
+                case CloseBlock:
+                    continue;
+                default:
+                    break;
+                }
+            }
 
-        case LineType::END_SDK:
             continue;
-
+        }
         case LineType::Ignore:
             continue;
 

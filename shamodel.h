@@ -24,8 +24,7 @@ public:
         END_SDK,
         Empty
     };
-
-    Q_ENUM(LineType)
+    //Q_ENUM(LineType)
 
 private:
     QStringList m_content;
@@ -50,6 +49,7 @@ private:
                               QString &_targetPoint, qint32 &_targetId,
                               QStringList &_nodes);
     static LineType getTypeLine(const QString &line);
+    static LineType getTypeLine(const QStringList &block, int idx);
 
     bool loadFile();
     bool parse();
