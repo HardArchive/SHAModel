@@ -125,7 +125,7 @@ SHAModel::LineType SHAModel::getLineType(const QString &line)
     if (checkPattern("MakeTrans(*)"))
         return LineType::Ignore;
 
-    //Действующие
+    //Актуальные
     if (checkPattern("Make(*)"))
         return LineType::Make;
     if (checkPattern("ver(*)"))
@@ -167,10 +167,10 @@ bool SHAModel::loadFile()
     if (!file.open(QIODevice::ReadOnly))
         return false;
 
-    QStringList tmpContent = QString::fromLocal8Bit(file.readAll()).split("\r\n");
+    const QStringList tmpContent = QString::fromLocal8Bit(file.readAll()).split("\r\n");
     QStringList content;
-    for (QString &s : tmpContent) {
-        QString tmp = s.trimmed();
+    for (const QString &s : tmpContent) {
+        const QString tmp = s.trimmed();
         if (!tmp.isEmpty())
             m_content << tmp;
     }
@@ -295,7 +295,6 @@ QVariantList SHAModel::parseContent(const QStringList &content)
             return QVariantList();
         case LineType::Ignore:
             continue;
-
         default:
             continue;
         }
