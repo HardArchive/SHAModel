@@ -246,6 +246,7 @@ QVariantMap SHAModel::parseElementBlock(const QStringList &block)
     return element;
 }
 
+
 QVariantMap SHAModel::getElementBlock(const QStringList &content, int &begin)
 {
     const int tmpBegin = begin;
