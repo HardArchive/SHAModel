@@ -54,9 +54,5 @@ private:
     static LineType getLineType(const QStringList &content, int idx);
 
     bool loadFile();
-    static QVariantMap parseElementBlock(const QStringList &block);
-    static QVariantMap getElementBlock(const QStringList &content, int &begin);
-    static QVariantList parseContent(const QStringList &content);
-    QVariantMap parseHeader(QStringList content);
     bool parse();
 };

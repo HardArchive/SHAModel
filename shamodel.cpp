@@ -178,157 +178,24 @@ bool SHAModel::loadFile()
     return true;
 }
 
-QVariantMap SHAModel::parseElementBlock(const QStringList &block)
-{
-    QVariantMap element;
-    QVariantList linkList;
-    const int size = block.size();
-    for (int iEBlock = 0; iEBlock < size; ++iEBlock) {
-        const LineType type = getLineType(block, iEBlock);
-
-        switch (type) {
-        case LineType::Add: {
-            QStringList params = findBlock(block[iEBlock], "Add(", ")").split(',');
-            if (params.size() < 4) {
-                qWarning() << "К-во аргументов меньше 4-х.";
-                return QVariantMap();
-            }
-
-            //Основные параметры элемента
-            element.insert("name", params[0]);
-            element.insert("id", params[1].toInt());
-            element.insert("x", params[2].toInt());
-            element.insert("y", params[3].toInt());
-
-            //Остальные параметры элемента
-            for (int iEParam = iEBlock + 1; iEParam < size; ++iEParam) {
-                switch (getLineType(block, iEParam)) {
-                case OpenBlock:
-                    continue;
-                case Link: {
-                    const QVariantMap link = linkToVariantMap(block[iEParam]);
-                    if (link.isEmpty()) {
-                        qWarning() << "Ошибка разбора параметров link(*)";
-                        return QVariantMap();
-                    }
-                    linkList.append(link);
-                    continue;
-                }
-                case Point:
-                    continue;
-                case Prop:
-                    continue;
-                case CloseBlock: {
-                    if (!linkList.isEmpty())
-                        element.insert("linkList", linkList);
-
-                    //Если элемент является контейнером
-                    if (getLineType(block, iEParam + 1) == LineType::BEGIN_SDK) {
-                        const auto container = parseContent(block.mid(iEParam + 2, size - iEParam - 2 - 1));
-                        element.insert("container", container);
-                    }
-
-                    return element;
-                }
-                default:
-                    break;
-                }
-                break;
-            }
-        }
-        case LineType::Ignore:
-            continue;
-
-        default:
-            continue;
-        }
-    }
-    return element;
-}
-
-
-QVariantMap SHAModel::getElementBlock(const QStringList &content, int &begin)
-{
-    const int tmpBegin = begin;
-    const int size = content.size();
-    for (int eBlock = begin + 1; eBlock < size; ++eBlock) {
-        if (getLineType(content, eBlock) == LineType::CloseBlock) {
-
-            if (getLineType(content, eBlock + 1) == LineType::BEGIN_SDK) {
-                int sdk = 0;
-                for (int cBlock = eBlock + 1; cBlock < size; ++cBlock) {
-                    const LineType type = getLineType(content, cBlock);
-                    if (type == LineType::BEGIN_SDK) {
-                        ++sdk;
-                    } else if (type == LineType::END_SDK) {
-                        --sdk;
-
-                        if (sdk == 0) {
-                            begin = cBlock;
-                            return parseElementBlock(content.mid(tmpBegin, cBlock - tmpBegin + 1));
-                        }
-                    }
-                }
-                qWarning() << "Отсутствует конец блока контейнера \"END_SDK\".";
-                return QVariantMap();
-            } else {
-                begin = eBlock;
-                return parseElementBlock(content.mid(tmpBegin, eBlock - tmpBegin + 1));
-            }
-        }
-    }
-    return QVariantMap();
-}
-
-QVariantList SHAModel::parseContent(const QStringList &content)
-{
-    QVariantList elementList;
-    const int size = content.size();
-    for (int i = 0; i < size; ++i) {
-        const LineType type = getLineType(content[i]);
-
-        switch (type) {
-        case LineType::Add: {
-            elementList << getElementBlock(content, i);
-            continue;
-        }
-        case LineType::Undefined:
-            return QVariantList();
-        case LineType::Ignore:
-            continue;
-        default:
-            continue;
-        }
-    }
-
-    return elementList;
-}
-
-QVariantMap SHAModel::parseHeader(QStringList content)
-{
-    QVariantMap header;
-    for (const QString line : content) {
-        switch (getLineType(line)) {
-        case LineType::Make:
-            header.insert("package", findBlock(line, "Make(", ")"));
-            continue;
-        case LineType::Ver:
-            header.insert("version", findBlock(line, "ver(", ")"));
-            continue;
-        case LineType::Ignore:
-            continue;
-
-        default:
-            return header;
-        }
-    }
-
-    return header;
-}
-
 bool SHAModel::parse()
 {
-    QVariantMap params = parseHeader(m_content);
-    QVariantList elementlist = parseContent(m_content);
+    const int size = m_content.size();
+    for (int i = 0; i < size; ++i) {
+        const QString sline = m_content[i];
+        const LineType type = getLineType(str);
+
+        switch (type) {
+        case LineType::Add:
+
+            break;
+        case LineType::Add:
+
+            break;
+        default:
+            break;
+        }
+    }
+
     return true;
 }
