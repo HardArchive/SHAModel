@@ -268,6 +268,8 @@ QVariantMap SHAModel::getElementBlock(const QStringList &content, int &begin)
                         }
                     }
                 }
+                qWarning() << "Отсутствует закрывающий блок \"END_SDK\".";
+                return QVariantMap();
             } else {
                 begin = eBlock;
                 return parseElementBlock(content.mid(tmpBegin, eBlock - tmpBegin + 1));
@@ -287,6 +289,7 @@ QVariantList SHAModel::parseContent(const QStringList &content)
         switch (type) {
         case LineType::Add: {
             elementList << getElementBlock(content, i);
+            continue;
         }
         case LineType::Undefined:
             return QVariantList();

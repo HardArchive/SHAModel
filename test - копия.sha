@@ -1,0 +1,42 @@
+Make(delphi)
+ver(4.05 build 186)
+Add(MainForm,2953706,21,105)
+{
+ link(onActivate,12046659:doWork1,[(81,111)])
+ link(onDeactivate,12046659:doWork2,[])
+ link(onCreate,11085344:doWork2,[])
+}
+Add(MultiElement,8430021,105,119)
+{
+}
+BEGIN_SDK
+  Add(EditMulti,12490169,21,21)
+  {
+   WorkCount=1
+   link(doWork1,11961254:doWork1,[(70,27)(70,97)])
+  }
+  Add(MultiElement,11961254,119,91)
+  {
+  }
+  BEGIN_SDK
+    Add(EditMulti,7486678,21,21)
+    {
+     WorkCount=1
+     link(doWork1,11435147:doMessage,[(87,27)(87,90)])
+    }
+    Add(Message,11435147,154,84)
+    {
+     Message="ew"
+     Point(doType)
+    }
+  END_SDK
+END_SDK
+Add(HubEx,11085344,77,119)
+{
+ link(onEvent,8430021:doWork1,[])
+}
+Add(HubEx,12046659,77,112)
+{
+ Angle=1
+ link(onEvent,11085344:doWork1,[])
+}
