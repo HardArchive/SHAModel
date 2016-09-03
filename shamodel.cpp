@@ -248,15 +248,15 @@ QVariantMap SHAModel::parseElementBlock(const QStringList &block)
 
 QVariantMap SHAModel::getElementBlock(const QStringList &content, int &begin)
 {
-    int tmpBegin = begin;
-    int size = content.size();
+    const int tmpBegin = begin;
+    const int size = content.size();
     for (int eBlock = begin + 1; eBlock < size; ++eBlock) {
         if (getLineType(content, eBlock) == LineType::CloseBlock) {
 
             if (getLineType(content, eBlock + 1) == LineType::BEGIN_SDK) {
                 int sdk = 0;
                 for (int cBlock = eBlock + 1; cBlock < size; ++cBlock) {
-                    LineType type = getLineType(content, cBlock);
+                    const LineType type = getLineType(content, cBlock);
                     if (type == LineType::BEGIN_SDK) {
                         ++sdk;
                     } else if (type == LineType::END_SDK) {
@@ -268,7 +268,7 @@ QVariantMap SHAModel::getElementBlock(const QStringList &content, int &begin)
                         }
                     }
                 }
-                qWarning() << "Отсутствует закрывающий блок \"END_SDK\".";
+                qWarning() << "Отсутствует конец блока контейнера \"END_SDK\".";
                 return QVariantMap();
             } else {
                 begin = eBlock;
@@ -282,7 +282,7 @@ QVariantMap SHAModel::getElementBlock(const QStringList &content, int &begin)
 QVariantList SHAModel::parseContent(const QStringList &content)
 {
     QVariantList elementList;
-    int size = content.size();
+    const int size = content.size();
     for (int i = 0; i < size; ++i) {
         const LineType type = getLineType(content[i]);
 
@@ -306,7 +306,6 @@ QVariantList SHAModel::parseContent(const QStringList &content)
 
 bool SHAModel::parse()
 {
-
     QVariantList list = parseContent(m_content);
     return true;
 }
