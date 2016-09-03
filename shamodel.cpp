@@ -311,7 +311,6 @@ QVariantMap SHAModel::parseHeader(QStringList content)
         case LineType::Make:
             header.insert("package", findBlock(line, "Make(", ")"));
             continue;
-
         case LineType::Ver:
             header.insert("version", findBlock(line, "ver(", ")"));
             continue;

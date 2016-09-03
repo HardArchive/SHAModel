@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     //    SHALoader loader(var);
     //    if (!loader.loadSha())
     //        break;
-    //}
+    //
     SHAModel loader(ex2);
     loader.loadSha();
 

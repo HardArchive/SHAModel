@@ -2,41 +2,44 @@ Make(delphi)
 ver(4.05 build 186)
 Add(MainForm,2953706,21,105)
 {
- link(onActivate,12046659:doWork1,[(81,111)])
- link(onDeactivate,12046659:doWork2,[])
- link(onCreate,11085344:doWork2,[])
 }
-Add(MultiElement,8430021,105,119)
+Add(Img_Rectangle,11532844,222,301)
 {
+ Point1=655370
+ Point2=2097184
+ Point2AsOffset=0
+ DrawSource=2
+ Style=1
+ Size=2
+ Color=-16777210
+ BgColor=15780518
+ Point(doDrawSource)
+ link(onDraw,12788739:doDraw,[])
 }
-BEGIN_SDK
-  Add(EditMulti,12490169,21,21)
-  {
-   WorkCount=1
-   link(doWork1,11961254:doWork1,[(70,27)(70,97)])
-  }
-  Add(MultiElement,11961254,119,91)
-  {
-  }
-  BEGIN_SDK
-    Add(EditMulti,7486678,21,21)
-    {
-     WorkCount=1
-     link(doWork1,11435147:doMessage,[(87,27)(87,90)])
-    }
-    Add(Message,11435147,154,84)
-    {
-     Message="ew"
-     Point(doType)
-    }
-  END_SDK
-END_SDK
-Add(HubEx,11085344,77,119)
+Add(LineBreakEx,15498467,215,336)
 {
- link(onEvent,8430021:doWork1,[])
+ Caption="DS_2"
+ Type=1
+ link(OnEvent,12788739:doDrawSource,[(270,342)(270,314)])
 }
-Add(HubEx,12046659,77,112)
+Add(Img_Ellipse,12788739,278,301)
 {
- Angle=1
- link(onEvent,11085344:doWork1,[])
+ Point1=655410
+ Point2=2097184
+ Point2AsOffset=0
+ DrawSource=2
+ Style=1
+ Color=-16777210
+ BgColor=12639424
+ Point(doDrawSource)
+}
+Add(LineBreakEx,4554182,271,336)
+{
+ Caption="DS_3"
+ Type=1
+}
+Add(LineBreakEx,8728695,159,336)
+{
+ Caption="DS_1"
+ Type=1
 }
