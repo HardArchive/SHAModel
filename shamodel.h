@@ -56,6 +56,6 @@ private:
     bool loadFile();
     static QVariantMap parseElementBlock(const QStringList &block);
     static QVariantMap getElementBlock(const QStringList &content, int &begin);
-    static QVariantList splitContent(const QStringList &content);
+    static QVariantList parseContent(const QStringList &content);
     bool parse();
 };
