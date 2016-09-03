@@ -303,8 +303,32 @@ QVariantList SHAModel::parseContent(const QStringList &content)
     return elementList;
 }
 
+QVariantMap SHAModel::parseHeader(QStringList content)
+{
+    QVariantMap header;
+    for (const QString line : content) {
+        switch (getLineType(line)) {
+        case LineType::Make:
+            header.insert("package", findBlock(line, "Make(", ")"));
+            continue;
+
+        case LineType::Ver:
+            header.insert("version", findBlock(line, "ver(", ")"));
+            continue;
+        case LineType::Ignore:
+            continue;
+
+        default:
+            return header;
+        }
+    }
+
+    return header;
+}
+
 bool SHAModel::parse()
 {
-    QVariantList list = parseContent(m_content);
+    QVariantMap params = parseHeader(m_content);
+    QVariantList elementlist = parseContent(m_content);
     return true;
 }
