@@ -50,8 +50,8 @@ private:
                                       bool cutBlock = false,
                                       bool removeTok = false);
     static QVariantMap linkToVariantMap(const QString &line);
-    static LineType getTypeLine(const QString &line);
-    static LineType getTypeLine(const QStringList &content, int idx);
+    static LineType getLineType(const QString &line);
+    static LineType getLineType(const QStringList &content, int idx);
 
     bool loadFile();
     static QVariantMap parseElementBlock(const QStringList &block);

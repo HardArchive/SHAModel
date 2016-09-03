@@ -100,7 +100,7 @@ QVariantMap SHAModel::linkToVariantMap(const QString &line)
     return map;
 }
 
-SHAModel::LineType SHAModel::getTypeLine(const QString &line)
+SHAModel::LineType SHAModel::getLineType(const QString &line)
 {
     auto checkPattern = [&line](const QString &pattern) {
         return QRegExp(pattern, Qt::CaseSensitive, QRegExp::WildcardUnix)
@@ -152,13 +152,13 @@ SHAModel::LineType SHAModel::getTypeLine(const QString &line)
     return LineType::Undefined;
 }
 
-SHAModel::LineType SHAModel::getTypeLine(const QStringList &content, int idx)
+SHAModel::LineType SHAModel::getLineType(const QStringList &content, int idx)
 {
     int size = content.size();
     if ((idx < 0) || (idx > (size - 1)))
         return LineType::Null;
 
-    return getTypeLine(content[idx]);
+    return getLineType(content[idx]);
 }
 
 bool SHAModel::loadFile()
@@ -184,7 +184,7 @@ QVariantMap SHAModel::parseElementBlock(const QStringList &block)
     QVariantList linkList;
     const int size = block.size();
     for (int iEBlock = 0; iEBlock < size; ++iEBlock) {
-        const LineType type = getTypeLine(block, iEBlock);
+        const LineType type = getLineType(block, iEBlock);
 
         switch (type) {
         case LineType::Add: {
@@ -202,7 +202,7 @@ QVariantMap SHAModel::parseElementBlock(const QStringList &block)
 
             //Остальные параметры элемента
             for (int iEParam = iEBlock + 1; iEParam < size; ++iEParam) {
-                switch (getTypeLine(block, iEParam)) {
+                switch (getLineType(block, iEParam)) {
                 case OpenBlock:
                     continue;
                 case Link: {
@@ -223,7 +223,7 @@ QVariantMap SHAModel::parseElementBlock(const QStringList &block)
                         element.insert("linkList", linkList);
 
                     //Если элемент является контейнером
-                    if (getTypeLine(block, iEParam + 1) == LineType::BEGIN_SDK) {
+                    if (getLineType(block, iEParam + 1) == LineType::BEGIN_SDK) {
                         const auto container = parseContent(block.mid(iEParam + 2, size - iEParam - 2 - 1));
                         element.insert("container", container);
                     }
@@ -251,15 +251,17 @@ QVariantMap SHAModel::getElementBlock(const QStringList &content, int &begin)
     int tmpBegin = begin;
     int size = content.size();
     for (int eBlock = begin + 1; eBlock < size; ++eBlock) {
-        if (getTypeLine(content, eBlock) == LineType::CloseBlock) {
-            if (getTypeLine(content, eBlock + 1) == LineType::BEGIN_SDK) {
+        if (getLineType(content, eBlock) == LineType::CloseBlock) {
+
+            if (getLineType(content, eBlock + 1) == LineType::BEGIN_SDK) {
                 int sdk = 0;
                 for (int cBlock = eBlock + 1; cBlock < size; ++cBlock) {
-                    LineType type = getTypeLine(content, cBlock);
+                    LineType type = getLineType(content, cBlock);
                     if (type == LineType::BEGIN_SDK) {
                         ++sdk;
                     } else if (type == LineType::END_SDK) {
                         --sdk;
+
                         if (sdk == 0) {
                             begin = cBlock;
                             return parseElementBlock(content.mid(tmpBegin, cBlock - tmpBegin + 1));
@@ -280,14 +282,14 @@ QVariantList SHAModel::parseContent(const QStringList &content)
     QVariantList elementList;
     int size = content.size();
     for (int i = 0; i < size; ++i) {
-        const LineType type = getTypeLine(content[i]);
+        const LineType type = getLineType(content[i]);
 
         switch (type) {
-        case LineType::Undefined:
-            return QVariantList();
         case LineType::Add: {
             elementList << getElementBlock(content, i);
         }
+        case LineType::Undefined:
+            return QVariantList();
         case LineType::Ignore:
             continue;
 
