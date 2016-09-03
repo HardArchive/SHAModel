@@ -183,14 +183,16 @@ bool SHAModel::parse()
     const int size = m_content.size();
     for (int i = 0; i < size; ++i) {
         const QString sline = m_content[i];
-        const LineType type = getLineType(str);
+        const LineType type = getLineType(sline);
 
         switch (type) {
         case LineType::Add:
 
             break;
-        case LineType::Add:
-
+        case LineType::CloseBlock:
+            if (getLineType(m_content, i + 1) == LineType::BEGIN_SDK) {
+                qInfo() << "Контейнер";
+            }
             break;
         default:
             break;

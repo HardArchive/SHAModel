@@ -43,3 +43,16 @@ Add(LineBreakEx,8728695,159,336)
  Caption="DS_1"
  Type=1
 }
+Add(LineBreakEx,8779489,159,301)
+{
+ Caption="Draw"
+ Type=1
+}
+Add(MultiElementEx,4369237,280,147)
+{
+}
+BEGIN_SDK
+  Add(EditMultiEx,15637501,21,21)
+  {
+  }
+END_SDK
