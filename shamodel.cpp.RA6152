@@ -42,7 +42,7 @@ QJsonDocument SHAModel::toJson()
     return QJsonDocument::fromVariant(content);
 }
 
-bool SHAModel::saveJsonToFile(const QString &filePath, QJsonDocument::JsonFormat format)
+bool SHAModel::saveJsonToFile(const QString &filePath)
 {
     QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly))
@@ -52,15 +52,15 @@ bool SHAModel::saveJsonToFile(const QString &filePath, QJsonDocument::JsonFormat
     if (doc.isEmpty())
         return false;
 
-    file.write(doc.toJson(format));
+    file.write(doc.toJson());
     return true;
 }
 
-bool SHAModel::saveJsonToFile(QJsonDocument::JsonFormat format)
+bool SHAModel::saveJsonToFile()
 {
-    QFileInfo info = QFileInfo(m_filePath);
-    const QString jsonFilePath = info.absolutePath() + QDir::separator() + info.baseName() + ".json";
-    return saveJsonToFile(jsonFilePath, format);
+    qInfo() << QFileInfo(m_filePath).absoluteDir();
+
+    return saveJsonToFile(m_filePath);
 }
 
 QString SHAModel::getFilePath() const

@@ -32,11 +32,18 @@ public:
 
 private:
     QStringList m_content;
+    QString m_filePath;
 
 public:
     explicit SHAModel(const QString &filePath, QObject *parent = 0);
-    bool loadSha(const QString &path);
+    explicit SHAModel(QObject *parent = 0);
+    bool loadSha();
     QJsonDocument toJson();
+    bool saveJsonToFile(const QString &filePath, QJsonDocument::JsonFormat format = QJsonDocument::Indented);
+    bool saveJsonToFile(QJsonDocument::JsonFormat format = QJsonDocument::Indented);
+
+    QString getFilePath() const;
+    void setFilePath(const QString &filePath);
 
 private:
     static QString findBlock(const QString &line, const QString &beginTok,

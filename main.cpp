@@ -1,39 +1,26 @@
 #include <QCoreApplication>
+#include <QCommandLineParser>
 #include <QDir>
 #include <QDebug>
 #include "shamodel.h"
 
-QStringList loadFiles(const QString &startDir, QStringList filters)
-{
-    QDir dir(startDir);
-    QStringList list;
-
-    foreach (QString file, dir.entryList(filters, QDir::Files))
-        list += startDir + "/" + file;
-
-    foreach (QString subdir, dir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot))
-        list += loadFiles(startDir + "/" + subdir, filters);
-    return list;
-}
-
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+    QCoreApplication::setOrganizationName(APP_COMPANY);
+    QCoreApplication::setOrganizationDomain(APP_COPYRIGHT);
+    QCoreApplication::setApplicationName(APP_PRODUCT);
     setlocale(LC_ALL, "");
 
-    QString examples = "D:/Users/Admin/AppData/Roaming/HiAsm_AltBuild/Elements/delphi/Example";
-    QString ex2 = "D:/dev/Qt/MainProjects/SHALoader/test.sha";
-
-    // auto list = loadFiles(examples, { "*.sha", "*.SHA" });
-    //
-    // for (auto var : list) {
-    //    SHALoader loader(var);
-    //    if (!loader.loadSha())
-    //        break;
-    //
-    SHAModel loader(ex2);
-    qInfo() << loader.toJson();
-    //loader.loadSha();
+    QCommandLineParser parser;
+    parser.process(a);
+    const QStringList fileList = parser.positionalArguments();
+    for (const QString &file : fileList) {
+        SHAModel model;
+        model.setFilePath(file);
+        model.loadSha();
+        model.saveJsonToFile();
+    }
 
     return a.exec();
 }
