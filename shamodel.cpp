@@ -15,8 +15,7 @@ bool SHAModel::loadSha()
     if (!loadFile())
         return false;
 
-    ResultParse res = parse();
-    if (res.second.isEmpty())
+    if (parse().isEmpty())
         return false;
 
     return true;
@@ -179,7 +178,7 @@ bool SHAModel::loadFile()
     return true;
 }
 
-SHAModel::ResultParse SHAModel::parse(int begin)
+QVariantList SHAModel::parse(int begin, int *prev)
 {
     QVariantList elementList;
     QVariantMap element;
@@ -195,7 +194,7 @@ SHAModel::ResultParse SHAModel::parse(int begin)
             QStringList params = findBlock(sline, "Add(", ")").split(',');
             if (params.size() < 4) {
                 qWarning() << "К-во аргументов меньше 4-х.";
-                return ResultParse();
+                return QVariantList();
             }
 
             //Основные параметры элемента
@@ -212,19 +211,19 @@ SHAModel::ResultParse SHAModel::parse(int begin)
             //Элемент является контейнером
             if (getLineType(m_content, i + 1) == LineType::BEGIN_SDK) {
                 qInfo() << "Является контейнером";
-                ResultParse res = parse(i + 2);
-                i = res.first;
-                element.insert("container", res.second);
+                element.insert("container", parse(i + 2, &i));
             }
             elementList += element;
             break;
         }
         case LineType::END_SDK:
-            return ResultParse(i + 1, elementList);
+            *prev = i + 1;
+            return elementList;
+
         default:
             break;
         }
     }
 
-    return ResultParse();
+    return elementList;
 }
