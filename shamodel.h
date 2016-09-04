@@ -5,6 +5,7 @@
 #include <QVariantMap>
 #include <QVariantList>
 #include <QStack>
+#include <QJsonDocument>
 
 class SHAModel : public QObject
 {

@@ -32,7 +32,8 @@ int main(int argc, char *argv[])
     //        break;
     //
     SHAModel loader(ex2);
-    loader.loadSha();
+    qInfo() << loader.toJson();
+    //loader.loadSha();
 
     return a.exec();
 }

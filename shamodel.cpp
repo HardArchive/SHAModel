@@ -3,21 +3,20 @@
 #include <QFile>
 #include <QRegExp>
 #include <QStringList>
+#include <QtCore>
 
 SHAModel::SHAModel(const QString &filePath, QObject *parent)
     : QObject(parent)
 {
-    if (!loadSha(filePath))
-        return false;
+    loadSha(filePath);
 }
 
 bool SHAModel::loadSha(const QString &path)
 {
     m_content.clear();
-    QFile file(m_filePath);
+    QFile file(path);
     if (!file.open(QIODevice::ReadOnly))
         return false;
-
     const QStringList tmpContent = QString::fromLocal8Bit(file.readAll()).split("\r\n");
     QStringList content;
     for (const QString &s : tmpContent) {
@@ -31,8 +30,17 @@ bool SHAModel::loadSha(const QString &path)
 
 QJsonDocument SHAModel::toJson()
 {
-    if (parseElements().isEmpty())
-        return false;
+    QVariantMap content = parseHeader();
+    QVariantList elements = parseElements();
+    content.insert("container", elements);
+
+    QJsonDocument doc = QJsonDocument::fromVariant(content);
+
+    QFile file("test.json");
+    file.open(QIODevice::WriteOnly);
+    file.write(doc.toJson());
+
+    return QJsonDocument();
 }
 
 QString SHAModel::findBlock(const QString &line, const QString &beginTok,
@@ -175,6 +183,29 @@ SHAModel::LineType SHAModel::getLineType(const QStringList &content, int idx)
     return getLineType(content[idx]);
 }
 
+QVariantMap SHAModel::parseHeader()
+{
+    QVariantMap header;
+    for (const QString line : m_content) {
+        switch (getLineType(line)) {
+        case LineType::Make:
+            header.insert("package", findBlock(line, "Make(", ")"));
+            continue;
+        case LineType::Ver:
+            header.insert("version", findBlock(line, "ver(", ")"));
+            continue;
+        case LineType::Add:
+            return header;
+        case LineType::Ignore:
+            continue;
+        default:
+            continue;
+        }
+    }
+
+    return header;
+}
+
 QVariantList SHAModel::parseElements(int begin, int _size, int *prev)
 {
     QVariantList elementList;
@@ -201,6 +232,7 @@ QVariantList SHAModel::parseElements(int begin, int _size, int *prev)
             element.insert("y", params[3].toInt());
             break;
         }
+
         case LineType::CloseBlock: {
             //Элемент является контейнером
             if (getLineType(m_content, i + 1) == LineType::BEGIN_SDK) {
