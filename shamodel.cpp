@@ -180,19 +180,31 @@ bool SHAModel::loadFile()
 
 bool SHAModel::parse()
 {
+    QStack<QVariantList> stack;
+    stack.append(QVariantList());
+    QVariantMap element;
+
     const int size = m_content.size();
     for (int i = 0; i < size; ++i) {
+
         const QString sline = m_content[i];
         const LineType type = getLineType(sline);
 
         switch (type) {
         case LineType::Add:
+            qInfo() << "Создание элемента";
+            element.insert("name",) get
 
+            qInfo() << "Добавление элемента в контейнер" << ;
             break;
         case LineType::CloseBlock:
+            //Элемент является контейнером
             if (getLineType(m_content, i + 1) == LineType::BEGIN_SDK) {
-                qInfo() << "Контейнер";
+                qInfo() << "Является контейнером";
+                qInfo() << "Создаём контейнер";
+                stack.push(new Container());
             }
+            qInfo() << "Завершение блока элемента";
             break;
         default:
             break;
