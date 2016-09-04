@@ -15,7 +15,8 @@ bool SHAModel::loadSha()
     if (!loadFile())
         return false;
 
-    if (!parse())
+    ResultParse res = parse();
+    if (res.second.isEmpty())
         return false;
 
     return true;
@@ -178,38 +179,56 @@ bool SHAModel::loadFile()
     return true;
 }
 
-bool SHAModel::parse()
+SHAModel::ResultParse SHAModel::parse(int begin)
 {
-    QStack<QVariantList> stack;
-    stack.append(QVariantList());
+    QVariantList elementList;
     QVariantMap element;
 
     const int size = m_content.size();
-    for (int i = 0; i < size; ++i) {
+    for (int i = begin; i < size; ++i) {
 
         const QString sline = m_content[i];
         const LineType type = getLineType(sline);
 
         switch (type) {
-        case LineType::Add:
+        case LineType::Add: {
             qInfo() << "Создание элемента";
-            element.insert("name",) get
+            QStringList params = findBlock(sline, "Add(", ")").split(',');
+            if (params.size() < 4) {
+                qWarning() << "К-во аргументов меньше 4-х.";
+                return ResultParse();
+            }
 
-            qInfo() << "Добавление элемента в контейнер" << ;
+            //Основные параметры элемента
+            element.clear();
+            element.insert("name", params[0]);
+            element.insert("id", params[1].toInt());
+            element.insert("x", params[2].toInt());
+            element.insert("y", params[3].toInt());
+
+            qInfo() << "Добавление элемента в контейнер";
             break;
-        case LineType::CloseBlock:
+        }
+        case LineType::CloseBlock: {
             //Элемент является контейнером
             if (getLineType(m_content, i + 1) == LineType::BEGIN_SDK) {
                 qInfo() << "Является контейнером";
-                qInfo() << "Создаём контейнер";
-                stack.push(new Container());
+                ResultParse res = parse(i + 2);
+                i = res.first;
+                element.insert("container", res.second);
             }
+            elementList += element;
             qInfo() << "Завершение блока элемента";
             break;
+        }
+        case LineType::END_SDK:
+            qInfo() << "Завершение блока контейнера";
+
+            return ResultParse(i + 1, elementList);
         default:
             break;
         }
     }
 
-    return true;
+    return ResultParse();
 }
