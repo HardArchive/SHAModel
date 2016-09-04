@@ -192,7 +192,6 @@ SHAModel::ResultParse SHAModel::parse(int begin)
 
         switch (type) {
         case LineType::Add: {
-            qInfo() << "Создание элемента";
             QStringList params = findBlock(sline, "Add(", ")").split(',');
             if (params.size() < 4) {
                 qWarning() << "К-во аргументов меньше 4-х.";
@@ -218,12 +217,9 @@ SHAModel::ResultParse SHAModel::parse(int begin)
                 element.insert("container", res.second);
             }
             elementList += element;
-            qInfo() << "Завершение блока элемента";
             break;
         }
         case LineType::END_SDK:
-            qInfo() << "Завершение блока контейнера";
-
             return ResultParse(i + 1, elementList);
         default:
             break;
