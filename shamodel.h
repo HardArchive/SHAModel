@@ -31,15 +31,11 @@ public:
 
 private:
     QStringList m_content;
-    QString m_filePath;
-
-private:
-    QString m_package;
-    QString m_version;
 
 public:
     explicit SHAModel(const QString &filePath, QObject *parent = 0);
-    bool loadSha();
+    bool loadSha(const QString &path);
+    QJsonDocument toJson();
 
 private:
     static QString findBlock(const QString &line, const QString &beginTok,
@@ -51,7 +47,6 @@ private:
     static QVariantMap linkToVariantMap(const QString &line);
     static LineType getLineType(const QString &line);
     static LineType getLineType(const QStringList &content, int idx);
-
-    bool loadFile();
-    QVariantList parse(int begin = 0, int *prev = 0);
+    QVariantMap parseHeader();
+    QVariantList parseElements(int begin = 0, int _size = 0, int *prev = 0);
 };

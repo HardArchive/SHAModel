@@ -6,19 +6,33 @@
 
 SHAModel::SHAModel(const QString &filePath, QObject *parent)
     : QObject(parent)
-    , m_filePath(filePath)
 {
+    if (!loadSha(filePath))
+        return false;
 }
 
-bool SHAModel::loadSha()
+bool SHAModel::loadSha(const QString &path)
 {
-    if (!loadFile())
+    m_content.clear();
+    QFile file(m_filePath);
+    if (!file.open(QIODevice::ReadOnly))
         return false;
 
-    if (parse().isEmpty())
-        return false;
+    const QStringList tmpContent = QString::fromLocal8Bit(file.readAll()).split("\r\n");
+    QStringList content;
+    for (const QString &s : tmpContent) {
+        const QString tmp = s.trimmed();
+        if (!tmp.isEmpty())
+            m_content << tmp;
+    }
 
     return true;
+}
+
+QJsonDocument SHAModel::toJson()
+{
+    if (parseElements().isEmpty())
+        return false;
 }
 
 QString SHAModel::findBlock(const QString &line, const QString &beginTok,
@@ -161,29 +175,12 @@ SHAModel::LineType SHAModel::getLineType(const QStringList &content, int idx)
     return getLineType(content[idx]);
 }
 
-bool SHAModel::loadFile()
-{
-    QFile file(m_filePath);
-    if (!file.open(QIODevice::ReadOnly))
-        return false;
-
-    const QStringList tmpContent = QString::fromLocal8Bit(file.readAll()).split("\r\n");
-    QStringList content;
-    for (const QString &s : tmpContent) {
-        const QString tmp = s.trimmed();
-        if (!tmp.isEmpty())
-            m_content << tmp;
-    }
-
-    return true;
-}
-
-QVariantList SHAModel::parse(int begin, int *prev)
+QVariantList SHAModel::parseElements(int begin, int _size, int *prev)
 {
     QVariantList elementList;
     QVariantMap element;
 
-    const int size = m_content.size();
+    const int size = (_size <= 0) ? m_content.size() : _size;
     for (int i = begin; i < size; ++i) {
 
         const QString sline = m_content[i];
@@ -198,22 +195,19 @@ QVariantList SHAModel::parse(int begin, int *prev)
             }
 
             //Основные параметры элемента
-            element.clear();
             element.insert("name", params[0]);
             element.insert("id", params[1].toInt());
             element.insert("x", params[2].toInt());
             element.insert("y", params[3].toInt());
-
-            qInfo() << "Добавление элемента в контейнер";
             break;
         }
         case LineType::CloseBlock: {
             //Элемент является контейнером
             if (getLineType(m_content, i + 1) == LineType::BEGIN_SDK) {
-                qInfo() << "Является контейнером";
-                element.insert("container", parse(i + 2, &i));
+                element.insert("container", parseElements(i + 2, size, &i));
             }
             elementList += element;
+            element.clear();
             break;
         }
         case LineType::END_SDK:
