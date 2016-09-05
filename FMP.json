@@ -1,0 +1,1150 @@
+{
+    "container": [
+        {
+            "id": 49024,
+            "name": "MainForm",
+            "x": 49,
+            "y": 175
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+            "id": 23124,
+            "links": [
+                {
+                    "targetId": 49841,
+                    "targetPoint": "doClear",
+                    "thisPoint": "onEvent1"
+                },
+                {
+                    "nodes": [
+                        "153,139",
+                        "153,118"
+                    ],
+                    "targetId": 93894,
+                    "targetPoint": "doData",
+                    "thisPoint": "onEvent2"
+                }
+            ],
+            "name": "Hub",
+            "x": 105,
+            "y": 126
+        },
+        {
+            "id": 24927,
+            "name": "Edit",
+            "x": 161,
+            "y": 70
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+            "id": 63573,
+            "name": "Message",
+            "x": 364,
+            "y": 112
+        },
+        {
+        },
+        {
+        },
+        {
+            "id": 49841,
+            "name": "StringTable",
+            "x": 273,
+            "y": 119
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+            "container": [
+                {
+                    "id": 71424,
+                    "name": "EditMulti",
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                },
+                {
+                    "links": [
+                        {
+                            "nodes": [
+                                "9,173",
+                                "27,173"
+                            ],
+                            "targetId": 8834,
+                            "targetPoint": "Text",
+                            "thisPoint": "Var1"
+                        },
+                        {
+                            "nodes": [
+                                "16,178",
+                                "69,178"
+                            ],
+                            "targetId": 13026,
+                            "targetPoint": "Text",
+                            "thisPoint": "Var2"
+                        },
+                        {
+                            "nodes": [
+                                "23,183",
+                                "111,183"
+                            ],
+                            "targetId": 13177,
+                            "targetPoint": "Text",
+                            "thisPoint": "Var3"
+                        },
+                        {
+                            "nodes": [
+                                "30,190",
+                                "153,190"
+                            ],
+                            "targetId": 59158,
+                            "targetPoint": "Text",
+                            "thisPoint": "Var4"
+                        }
+                    ]
+                },
+                {
+                    "id": 99441,
+                    "name": "Panel",
+                    "x": 126,
+                    "y": 63
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                    "id": 59158,
+                    "name": "Edit",
+                    "x": 147,
+                    "y": 126
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                    "id": 43147,
+                    "name": "Button",
+                    "x": 203,
+                    "y": 126
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                    "links": [
+                        {
+                            "nodes": [
+                                "269132,30"
+                            ],
+                            "targetId": 71424,
+                            "targetPoint": "onEvent4",
+                            "thisPoint": "onClick"
+                        }
+                    ]
+                },
+                {
+                    "id": 67731,
+                    "name": "Button",
+                    "x": 203,
+                    "y": 91
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                    "links": [
+                        {
+                            "nodes": [
+                                "269,97",
+                                "269,23"
+                            ],
+                            "targetId": 71424,
+                            "targetPoint": "onEvent3",
+                            "thisPoint": "onClick"
+                        }
+                    ]
+                },
+                {
+                    "id": 13026,
+                    "name": "Edit",
+                    "x": 63,
+                    "y": 126
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                    "id": 41458,
+                    "name": "Button",
+                    "x": 203,
+                    "y": 56
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                    "links": [
+                        {
+                            "nodes": [
+                                "269,62",
+                                "269,16"
+                            ],
+                            "targetId": 71424,
+                            "targetPoint": "onEvent2",
+                            "thisPoint": "onClick"
+                        }
+                    ]
+                },
+                {
+                    "id": 8834,
+                    "name": "Edit",
+                    "x": 21,
+                    "y": 126
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                    "id": 13177,
+                    "name": "Edit",
+                    "x": 105,
+                    "y": 126
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                    "id": 5191,
+                    "name": "Button",
+                    "x": 203,
+                    "y": 21
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                },
+                {
+                    "links": [
+                        {
+                            "nodes": [
+                                "269,27",
+                                "269,9"
+                            ],
+                            "targetId": 71424,
+                            "targetPoint": "onEvent1",
+                            "thisPoint": "onClick"
+                        }
+                    ]
+                },
+                {
+                    "container": [
+                        {
+                            "id": 8195020,
+                            "name": "EditMultiEx",
+                            "x": 21,
+                            "y": 21
+                        },
+                        {
+                        }
+                    ],
+                    "id": 13115311,
+                    "name": "MultiElementEx",
+                    "x": 70,
+                    "y": 70
+                },
+                {
+                    "id": 33044,
+                    "links": [
+                        {
+                            "targetId": 63573,
+                            "targetPoint": "doMessage",
+                            "thisPoint": "onRead"
+                        },
+                        {
+                            "targetId": 99991,
+                            "targetPoint": "Array",
+                            "thisPoint": "Array"
+                        }
+                    ],
+                    "name": "ArrayRW",
+                    "x": 322,
+                    "y": 112
+                },
+                {
+                    "id": 91755,
+                    "name": "Hub",
+                    "x": 161,
+                    "y": 196
+                },
+                {
+                    "links": [
+                        {
+                            "nodes": [
+                                "211,202",
+                                "211,153"
+                            ],
+                            "targetId": 49841,
+                            "targetPoint": "doSave",
+                            "thisPoint": "onEvent1"
+                        },
+                        {
+                            "nodes": [
+                                "220,209",
+                                "220,174"
+                            ],
+                            "targetId": 69603,
+                            "targetPoint": "doOpen",
+                            "thisPoint": "onEvent2"
+                        },
+                        {
+                            "targetId": 40306,
+                            "targetPoint": "doData",
+                            "thisPoint": "onEvent3"
+                        },
+                        {
+                            "nodes": [
+                                "228,223",
+                                "228,181"
+                            ],
+                            "targetId": 69603,
+                            "targetPoint": "doClose",
+                            "thisPoint": "onEvent4"
+                        }
+                    ]
+                },
+                {
+                    "id": 40306,
+                    "links": [
+                        {
+                            "targetId": 72386,
+                            "targetPoint": "doPut",
+                            "thisPoint": "onEventData"
+                        },
+                        {
+                            "targetId": 66015,
+                            "targetPoint": "Proc",
+                            "thisPoint": "Data"
+                        }
+                    ],
+                    "name": "DoData",
+                    "x": 238,
+                    "y": 210
+                },
+                {
+                    "id": 99991,
+                    "name": "StrList",
+                    "x": 308,
+                    "y": 49
+                },
+                {
+                },
+                {
+                    "id": 93894,
+                    "links": [
+                        {
+                            "targetId": 66015,
+                            "targetPoint": "doMathStr",
+                            "thisPoint": "onEventData"
+                        },
+                        {
+                            "targetId": 24927,
+                            "targetPoint": "Text",
+                            "thisPoint": "Data"
+                        }
+                    ],
+                    "name": "DoData",
+                    "x": 161,
+                    "y": 112
+                },
+                {
+                    "id": 93826,
+                    "name": "Message",
+                    "x": 266,
+                    "y": 70
+                },
+                {
+                },
+                {
+                },
+                {
+                    "id": 69603,
+                    "name": "FileStream",
+                    "x": 287,
+                    "y": 168
+                },
+                {
+                },
+                {
+                },
+                {
+                    "id": 72386,
+                    "name": "DataToFile",
+                    "x": 287,
+                    "y": 210
+                },
+                {
+                    "links": [
+                        {
+                            "targetId": 69603,
+                            "targetPoint": "Stream",
+                            "thisPoint": "Stream"
+                        }
+                    ]
+                },
+                {
+                    "id": 66015,
+                    "name": "FastMathParse",
+                    "x": 217,
+                    "y": 105
+                },
+                {
+                },
+                {
+                    "point": [
+                        "doMathStr"
+                    ]
+                },
+                {
+                    "point": [
+                        "doClear"
+                    ]
+                },
+                {
+                    "point": [
+                        "onError"
+                    ]
+                },
+                {
+                    "point": [
+                        "onDebugStrings"
+                    ]
+                },
+                {
+                    "point": [
+                        "reCalc"
+                    ]
+                },
+                {
+                    "point": [
+                        "PosErr"
+                    ]
+                },
+                {
+                    "point": [
+                        "Proc"
+                    ]
+                },
+                {
+                    "links": [
+                        {
+                            "nodes": [
+                                "260,111",
+                                "260,76"
+                            ],
+                            "targetId": 93826,
+                            "targetPoint": "doMessage",
+                            "thisPoint": "onResult"
+                        },
+                        {
+                            "nodes": [
+                                "223,60",
+                                "62,60"
+                            ],
+                            "targetId": 5198,
+                            "targetPoint": "Var1",
+                            "thisPoint": "X1"
+                        },
+                        {
+                            "nodes": [
+                                "230,57",
+                                "69,57"
+                            ],
+                            "targetId": 5198,
+                            "targetPoint": "Var2",
+                            "thisPoint": "X2"
+                        },
+                        {
+                            "nodes": [
+                                "237,55",
+                                "76,55"
+                            ],
+                            "targetId": 5198,
+                            "targetPoint": "Var3",
+                            "thisPoint": "X3"
+                        },
+                        {
+                            "nodes": [
+                                "244,50",
+                                "83,50"
+                            ],
+                            "targetId": 5198,
+                            "targetPoint": "Var4",
+                            "thisPoint": "X4"
+                        },
+                        {
+                            "targetId": 33044,
+                            "targetPoint": "doRead",
+                            "thisPoint": "onError"
+                        },
+                        {
+                            "targetId": 49841,
+                            "targetPoint": "doAdd",
+                            "thisPoint": "onDebugStrings"
+                        }
+                    ]
+                }
+            ],
+            "id": 5198,
+            "links": [
+                {
+                    "nodes": [
+                        "102,118",
+                        "102,111"
+                    ],
+                    "targetId": 66015,
+                    "targetPoint": "doCalc",
+                    "thisPoint": "onEvent1"
+                },
+                {
+                    "targetId": 66015,
+                    "targetPoint": "doClear",
+                    "thisPoint": "onEvent2"
+                },
+                {
+                    "targetId": 23124,
+                    "targetPoint": "doEvent1",
+                    "thisPoint": "onEvent3"
+                },
+                {
+                    "nodes": [
+                        "101,139",
+                        "101,202"
+                    ],
+                    "targetId": 91755,
+                    "targetPoint": "doEvent1",
+                    "thisPoint": "onEvent4"
+                }
+            ],
+            "name": "ChildPanel",
+            "x": 56,
+            "y": 112
+        },
+        {
+            "id": 71424,
+            "name": "EditMulti",
+            "x": 3,
+            "y": 3
+        },
+        {
+        },
+        {
+            "links": [
+                {
+                    "nodes": [
+                        "9,173",
+                        "27,173"
+                    ],
+                    "targetId": 8834,
+                    "targetPoint": "Text",
+                    "thisPoint": "Var1"
+                },
+                {
+                    "nodes": [
+                        "16,178",
+                        "69,178"
+                    ],
+                    "targetId": 13026,
+                    "targetPoint": "Text",
+                    "thisPoint": "Var2"
+                },
+                {
+                    "nodes": [
+                        "23,183",
+                        "111,183"
+                    ],
+                    "targetId": 13177,
+                    "targetPoint": "Text",
+                    "thisPoint": "Var3"
+                },
+                {
+                    "nodes": [
+                        "30,190",
+                        "153,190"
+                    ],
+                    "targetId": 59158,
+                    "targetPoint": "Text",
+                    "thisPoint": "Var4"
+                }
+            ]
+        },
+        {
+            "id": 99441,
+            "name": "Panel",
+            "x": 126,
+            "y": 63
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+            "id": 59158,
+            "name": "Edit",
+            "x": 147,
+            "y": 126
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+            "id": 43147,
+            "name": "Button",
+            "x": 203,
+            "y": 126
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+            "links": [
+                {
+                    "nodes": [
+                        "269132,30"
+                    ],
+                    "targetId": 71424,
+                    "targetPoint": "onEvent4",
+                    "thisPoint": "onClick"
+                }
+            ]
+        },
+        {
+            "id": 67731,
+            "name": "Button",
+            "x": 203,
+            "y": 91
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+            "links": [
+                {
+                    "nodes": [
+                        "269,97",
+                        "269,23"
+                    ],
+                    "targetId": 71424,
+                    "targetPoint": "onEvent3",
+                    "thisPoint": "onClick"
+                }
+            ]
+        },
+        {
+            "id": 13026,
+            "name": "Edit",
+            "x": 63,
+            "y": 126
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+            "id": 41458,
+            "name": "Button",
+            "x": 203,
+            "y": 56
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+            "links": [
+                {
+                    "nodes": [
+                        "269,62",
+                        "269,16"
+                    ],
+                    "targetId": 71424,
+                    "targetPoint": "onEvent2",
+                    "thisPoint": "onClick"
+                }
+            ]
+        },
+        {
+            "id": 8834,
+            "name": "Edit",
+            "x": 21,
+            "y": 126
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+            "id": 13177,
+            "name": "Edit",
+            "x": 105,
+            "y": 126
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+            "id": 5191,
+            "name": "Button",
+            "x": 203,
+            "y": 21
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+        },
+        {
+            "links": [
+                {
+                    "nodes": [
+                        "269,27",
+                        "269,9"
+                    ],
+                    "targetId": 71424,
+                    "targetPoint": "onEvent1",
+                    "thisPoint": "onClick"
+                }
+            ]
+        },
+        {
+            "container": [
+                {
+                    "id": 8195020,
+                    "name": "EditMultiEx",
+                    "x": 21,
+                    "y": 21
+                },
+                {
+                }
+            ],
+            "id": 13115311,
+            "name": "MultiElementEx",
+            "x": 70,
+            "y": 70
+        },
+        {
+            "id": 33044,
+            "links": [
+                {
+                    "targetId": 63573,
+                    "targetPoint": "doMessage",
+                    "thisPoint": "onRead"
+                },
+                {
+                    "targetId": 99991,
+                    "targetPoint": "Array",
+                    "thisPoint": "Array"
+                }
+            ],
+            "name": "ArrayRW",
+            "x": 322,
+            "y": 112
+        },
+        {
+            "id": 91755,
+            "name": "Hub",
+            "x": 161,
+            "y": 196
+        },
+        {
+            "links": [
+                {
+                    "nodes": [
+                        "211,202",
+                        "211,153"
+                    ],
+                    "targetId": 49841,
+                    "targetPoint": "doSave",
+                    "thisPoint": "onEvent1"
+                },
+                {
+                    "nodes": [
+                        "220,209",
+                        "220,174"
+                    ],
+                    "targetId": 69603,
+                    "targetPoint": "doOpen",
+                    "thisPoint": "onEvent2"
+                },
+                {
+                    "targetId": 40306,
+                    "targetPoint": "doData",
+                    "thisPoint": "onEvent3"
+                },
+                {
+                    "nodes": [
+                        "228,223",
+                        "228,181"
+                    ],
+                    "targetId": 69603,
+                    "targetPoint": "doClose",
+                    "thisPoint": "onEvent4"
+                }
+            ]
+        },
+        {
+            "id": 40306,
+            "links": [
+                {
+                    "targetId": 72386,
+                    "targetPoint": "doPut",
+                    "thisPoint": "onEventData"
+                },
+                {
+                    "targetId": 66015,
+                    "targetPoint": "Proc",
+                    "thisPoint": "Data"
+                }
+            ],
+            "name": "DoData",
+            "x": 238,
+            "y": 210
+        },
+        {
+            "id": 99991,
+            "name": "StrList",
+            "x": 308,
+            "y": 49
+        },
+        {
+        },
+        {
+            "id": 93894,
+            "links": [
+                {
+                    "targetId": 66015,
+                    "targetPoint": "doMathStr",
+                    "thisPoint": "onEventData"
+                },
+                {
+                    "targetId": 24927,
+                    "targetPoint": "Text",
+                    "thisPoint": "Data"
+                }
+            ],
+            "name": "DoData",
+            "x": 161,
+            "y": 112
+        },
+        {
+            "id": 93826,
+            "name": "Message",
+            "x": 266,
+            "y": 70
+        },
+        {
+        },
+        {
+        },
+        {
+            "id": 69603,
+            "name": "FileStream",
+            "x": 287,
+            "y": 168
+        },
+        {
+        },
+        {
+        },
+        {
+            "id": 72386,
+            "name": "DataToFile",
+            "x": 287,
+            "y": 210
+        },
+        {
+            "links": [
+                {
+                    "targetId": 69603,
+                    "targetPoint": "Stream",
+                    "thisPoint": "Stream"
+                }
+            ]
+        },
+        {
+            "id": 66015,
+            "name": "FastMathParse",
+            "x": 217,
+            "y": 105
+        },
+        {
+        },
+        {
+            "point": [
+                "doMathStr"
+            ]
+        },
+        {
+            "point": [
+                "doClear"
+            ]
+        },
+        {
+            "point": [
+                "onError"
+            ]
+        },
+        {
+            "point": [
+                "onDebugStrings"
+            ]
+        },
+        {
+            "point": [
+                "reCalc"
+            ]
+        },
+        {
+            "point": [
+                "PosErr"
+            ]
+        },
+        {
+            "point": [
+                "Proc"
+            ]
+        },
+        {
+            "links": [
+                {
+                    "nodes": [
+                        "260,111",
+                        "260,76"
+                    ],
+                    "targetId": 93826,
+                    "targetPoint": "doMessage",
+                    "thisPoint": "onResult"
+                },
+                {
+                    "nodes": [
+                        "223,60",
+                        "62,60"
+                    ],
+                    "targetId": 5198,
+                    "targetPoint": "Var1",
+                    "thisPoint": "X1"
+                },
+                {
+                    "nodes": [
+                        "230,57",
+                        "69,57"
+                    ],
+                    "targetId": 5198,
+                    "targetPoint": "Var2",
+                    "thisPoint": "X2"
+                },
+                {
+                    "nodes": [
+                        "237,55",
+                        "76,55"
+                    ],
+                    "targetId": 5198,
+                    "targetPoint": "Var3",
+                    "thisPoint": "X3"
+                },
+                {
+                    "nodes": [
+                        "244,50",
+                        "83,50"
+                    ],
+                    "targetId": 5198,
+                    "targetPoint": "Var4",
+                    "thisPoint": "X4"
+                },
+                {
+                    "targetId": 33044,
+                    "targetPoint": "doRead",
+                    "thisPoint": "onError"
+                },
+                {
+                    "targetId": 49841,
+                    "targetPoint": "doAdd",
+                    "thisPoint": "onDebugStrings"
+                }
+            ]
+        }
+    ],
+    "package": "delphi",
+    "version": "4.05 build 186"
+}
