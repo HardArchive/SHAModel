@@ -2,6 +2,7 @@
 #include <QCommandLineParser>
 #include <QDir>
 #include <QDebug>
+#include <QElapsedTimer>
 #include "shamodel.h"
 
 int main(int argc, char *argv[])
@@ -12,6 +13,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName(APP_PRODUCT);
     setlocale(LC_ALL, "");
 
+    QElapsedTimer timer;
     QCommandLineParser parser;
     parser.process(a);
     const QStringList fileList = parser.positionalArguments();
@@ -19,7 +21,9 @@ int main(int argc, char *argv[])
         SHAModel model;
         model.setFilePath(file);
         model.loadSha();
+        timer.start();
         model.saveJsonToFile();
+        qInfo() << timer.elapsed() << "ms";
     }
 
     return a.exec();

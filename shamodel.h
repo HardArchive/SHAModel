@@ -37,11 +37,13 @@ private:
 public:
     explicit SHAModel(const QString &filePath, QObject *parent = 0);
     explicit SHAModel(QObject *parent = 0);
+
+public:
     bool loadSha();
     QJsonDocument toJson();
+    QByteArray toBson();
     bool saveJsonToFile(const QString &filePath, QJsonDocument::JsonFormat format = QJsonDocument::Indented);
     bool saveJsonToFile(QJsonDocument::JsonFormat format = QJsonDocument::Indented);
-
     QString getFilePath() const;
     void setFilePath(const QString &filePath);
 

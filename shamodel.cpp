@@ -42,6 +42,11 @@ QJsonDocument SHAModel::toJson()
     return QJsonDocument::fromVariant(content);
 }
 
+QByteArray SHAModel::toBson()
+{
+    return toJson().toBinaryData();
+}
+
 bool SHAModel::saveJsonToFile(const QString &filePath, QJsonDocument::JsonFormat format)
 {
     QFile file(filePath);
