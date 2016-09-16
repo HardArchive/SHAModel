@@ -246,6 +246,8 @@ QVariantList SHAModel::parseElements(int begin, int _size, int *prev)
     QVariantList elementList;
     QVariantMap element;
     QVariantList linkList;
+    QVariantList pointList;
+    QVariantList propList;
 
     const int size = (_size <= 0) ? m_content.size() : _size;
     for (int i = begin; i < size; ++i) {
@@ -268,7 +270,7 @@ QVariantList SHAModel::parseElements(int begin, int _size, int *prev)
             element.insert("y", params[3].toInt());
             break;
         }
-        case Link: {
+        case LineType::Link: {
             const QVariantMap link = linkToVariantMap(sline);
             if (link.isEmpty()) {
                 qWarning() << "Ошибка при разборе параметров link(*)";
@@ -277,13 +279,35 @@ QVariantList SHAModel::parseElements(int begin, int _size, int *prev)
             linkList.append(link);
             continue;
         }
+        case LineType::Point: {
+            const QString point = findBlock(sline, "(", ")");
+            if (!point.isEmpty())
+                pointList << point;
+            else
+                qWarning() << "Ошибка при разборе параметров Point(*)";
+
+            continue;
+        }
+        case LineType::Prop: {
+            continue;
+        }
         case LineType::CloseBlock: {
             //Элемент является контейнером
             if (getLineType(m_content, i + 1) == LineType::BEGIN_SDK) {
-                element.insert("container", parseElements(i + 2, size, &i));
+                const QVariantList list = parseElements(i + 2, size, &i);
+                element.insert("container", list);
             }
+
             if (!linkList.isEmpty())
                 element.insert("links", linkList);
+            if (!pointList.isEmpty())
+                element.insert("points", pointList);
+            if (!propList.isEmpty())
+                element.insert("props", propList);
+
+            linkList.clear();
+            pointList.clear();
+            propList.clear();
             elementList += element;
             element.clear();
             break;
