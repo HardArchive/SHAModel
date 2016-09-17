@@ -55,6 +55,7 @@ private:
                                       const QString &endTok,
                                       bool cutBlock = false,
                                       bool removeTok = false);
+    static QPair<QString, QString> splitBlock(const QString &line, const QChar &sym);
     static QVariantMap linkToVariantMap(const QString &sline);
     static QVariantMap propToVariantMap(const QString &sline);
 
