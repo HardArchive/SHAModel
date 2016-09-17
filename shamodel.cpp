@@ -158,7 +158,7 @@ QVariantMap SHAModel::linkToVariantMap(const QString &line)
 
 QVariantMap SHAModel::propToVariantMap(const QString &line)
 {
-
+    qInfo() << line;
 }
 
 SHAModel::LineType SHAModel::getLineType(const QString &line)
@@ -172,8 +172,6 @@ SHAModel::LineType SHAModel::getLineType(const QString &line)
     if (checkPattern("AddHint(*"))
         return LineType::Ignore;
     if (checkPattern("\\**"))
-        return LineType::Ignore;
-    if (checkPattern("@*=*"))
         return LineType::Ignore;
     if (checkPattern("Pos(*)"))
         return LineType::Ignore;
@@ -201,6 +199,8 @@ SHAModel::LineType SHAModel::getLineType(const QString &line)
         return LineType::Link;
     if (checkPattern("Point(*)"))
         return LineType::Point;
+    if (checkPattern("@*=*"))
+        return LineType::HideProp;
     if (checkPattern("*=*"))
         return LineType::Prop;
     if (checkPattern("BEGIN_SDK"))
@@ -294,6 +294,12 @@ QVariantList SHAModel::parseElements(int begin, int _size, int *prev)
         }
         case LineType::HideProp:
         case LineType::Prop: {
+            const QVariantMap prop = propToVariantMap(sline);
+            if (!prop.isEmpty())
+                propList << prop;
+            else
+                qWarning() << "Ошибка при разборе свойства";
+
             continue;
         }
         case LineType::CloseBlock: {
