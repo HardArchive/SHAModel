@@ -156,6 +156,11 @@ QVariantMap SHAModel::linkToVariantMap(const QString &line)
     return map;
 }
 
+QVariantMap SHAModel::propToVariantMap(const QString &line)
+{
+
+}
+
 SHAModel::LineType SHAModel::getLineType(const QString &line)
 {
     auto checkPattern = [&line](const QString &pattern) {
@@ -287,6 +292,7 @@ QVariantList SHAModel::parseElements(int begin, int _size, int *prev)
 
             continue;
         }
+        case LineType::HideProp:
         case LineType::Prop: {
             continue;
         }

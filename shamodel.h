@@ -23,6 +23,7 @@ public:
         CloseBlock,
         Link,
         Point,
+        HideProp,
         Prop,
         BEGIN_SDK,
         END_SDK,
@@ -55,6 +56,7 @@ private:
                                       bool cutBlock = false,
                                       bool removeTok = false);
     static QVariantMap linkToVariantMap(const QString &line);
+    static QVariantMap propToVariantMap(const QString &line);
 
     static LineType getLineType(const QString &line);
     static LineType getLineType(const QStringList &content, int idx);
