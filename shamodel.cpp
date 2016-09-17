@@ -23,7 +23,6 @@ bool SHAModel::loadSha()
     if (!file.open(QIODevice::ReadOnly))
         return false;
     const QStringList tmpContent = QString::fromLocal8Bit(file.readAll()).split("\r\n");
-    QStringList content;
     for (const QString &s : tmpContent) {
         const QString tmp = s.trimmed();
         if (!tmp.isEmpty())
