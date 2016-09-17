@@ -55,8 +55,8 @@ private:
                                       const QString &endTok,
                                       bool cutBlock = false,
                                       bool removeTok = false);
-    static QVariantMap linkToVariantMap(const QString &line);
-    static QVariantMap propToVariantMap(const QString &line);
+    static QVariantMap linkToVariantMap(const QString &sline);
+    static QVariantMap propToVariantMap(const QString &sline);
 
     static LineType getLineType(const QString &line);
     static LineType getLineType(const QStringList &content, int idx);

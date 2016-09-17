@@ -125,11 +125,11 @@ QStringList SHAModel::findMultiBlock(QString &str, const QString &beginTok,
     return list;
 }
 
-QVariantMap SHAModel::linkToVariantMap(const QString &line)
+QVariantMap SHAModel::linkToVariantMap(const QString &sline)
 {
     QVariantMap map;
     QStringList res;
-    const QString link = findBlock(line, "link(", ")");
+    const QString link = findBlock(sline, "link(", ")");
     const QStringList blockList = link.split(':');
     if (blockList.size() < 2)
         return QVariantMap();
@@ -156,9 +156,37 @@ QVariantMap SHAModel::linkToVariantMap(const QString &line)
     return map;
 }
 
-QVariantMap SHAModel::propToVariantMap(const QString &line)
+QVariantMap SHAModel::propToVariantMap(const QString &sline)
 {
-    qInfo() << line;
+    if (sline.isEmpty())
+        return QVariantMap();
+
+    bool isHide = false;
+    QString tmpLine = sline;
+
+    //Скрытое свойство
+    if (tmpLine.at(0) == QLatin1Char('@')) {
+        tmpLine.remove(0, 1);
+        isHide = true;
+    }
+
+    bool split = false;
+    QString blockName;
+    QString blockValue;
+    for (const QChar &c : sline) {
+        if (split == false && c == QLatin1Char('=')) {
+            split = true;
+            continue;
+        }
+
+        if (!split) {
+            blockName += c;
+        } else {
+            blockValue += c;
+        }
+    }
+
+    return QVariantMap();
 }
 
 SHAModel::LineType SHAModel::getLineType(const QString &line)

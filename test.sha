@@ -5,10 +5,13 @@ Add(MainForm,2953706,21,105)
 }
 Add(Button,14822856,91,105)
 {
+ @Hint=#13:hisaerer акек|
  Left=195
  Top=70
+ Caption="тест"
  Point(doEnabled)
  link(onClick,11889808:doWork1,[])
+ AddHint(6,56,79,13,@Hint)
 }
 Add(MultiElement,11889808,154,105)
 {
