@@ -31,6 +31,12 @@ public:
     };
     Q_ENUM(LineType)
 
+    enum ParseType {
+        BeginToEnd,
+        EndToBegin
+    };
+    Q_ENUM(ParseType)
+
 private:
     QStringList m_content;
     QString m_filePath;
@@ -55,11 +61,11 @@ private:
                                       const QString &endTok,
                                       bool cutBlock = false,
                                       bool removeTok = false);
-    static QPair<QString, QString> splitBlock(const QString &line, const QChar &sym);
+    static QPair<QString, QString> splitSLine(const QString &sline, const QChar &sym, ParseType type = BeginToEnd);
     static QVariantMap linkToVariantMap(const QString &sline);
     static QVariantMap propToVariantMap(const QString &sline);
 
-    static LineType getLineType(const QString &line);
+    static LineType getLineType(const QString &sline);
     static LineType getLineType(const QStringList &content, int idx);
     QVariantMap parseHeader();
     QVariantList parseElements(int begin = 0, int _size = 0, int *prev = 0);

@@ -125,6 +125,40 @@ QStringList SHAModel::findMultiBlock(QString &str, const QString &beginTok,
     return list;
 }
 
+QPair<QString, QString> SHAModel::splitSLine(const QString &sline, const QChar &sym, ParseType type)
+{
+    bool split = false;
+    QString block1;
+    QString block2;
+
+    auto splitted = [&](int idx) {
+        const QChar c = sline.at(idx);
+        if ((split == false) && (c == sym)) {
+            split = true;
+            return;
+        }
+
+        if (!split) {
+            block1 += c;
+        } else {
+            block2 += c;
+        }
+    };
+
+    int size = sline.size();
+    if (type == BeginToEnd) {
+        for (int i = 0; i < size; ++i) {
+            splitted(i);
+        }
+    } else {
+        for (int i = size; i > 0; --i) {
+            splitted(i);
+        }
+    }
+
+    return {block1, block2};
+}
+
 QVariantMap SHAModel::linkToVariantMap(const QString &sline)
 {
     QVariantMap map;
@@ -170,30 +204,14 @@ QVariantMap SHAModel::propToVariantMap(const QString &sline)
         isHide = true;
     }
 
-    bool split = false;
-    QString blockName;
-    QString blockValue;
-    for (const QChar &c : sline) {
-        if (split == false && c == QLatin1Char('=')) {
-            split = true;
-            continue;
-        }
-
-        if (!split) {
-            blockName += c;
-        } else {
-            blockValue += c;
-        }
-    }
-
     return QVariantMap();
 }
 
-SHAModel::LineType SHAModel::getLineType(const QString &line)
+SHAModel::LineType SHAModel::getLineType(const QString &sline)
 {
-    auto checkPattern = [&line](const QString &pattern) {
+    auto checkPattern = [&sline](const QString &pattern) {
         return QRegExp(pattern, Qt::CaseSensitive, QRegExp::WildcardUnix)
-            .exactMatch(line);
+            .exactMatch(sline);
     };
 
     // Ignore
@@ -235,7 +253,7 @@ SHAModel::LineType SHAModel::getLineType(const QString &line)
         return LineType::BEGIN_SDK;
     if (checkPattern("END_SDK"))
         return LineType::END_SDK;
-    if (line.isEmpty())
+    if (sline.isEmpty())
         return LineType::Empty;
 
     return LineType::Undefined;
