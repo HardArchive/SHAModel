@@ -61,7 +61,7 @@ private:
                                       const QString &endTok,
                                       bool cutBlock = false,
                                       bool removeTok = false);
-    static QPair<QString, QString> splitSLine(const QString &sline, const QChar &sym, ParseType type = BeginToEnd);
+    static QPair<QString, QString> splitSLine(const QString &sline, const QChar &del, ParseType type = BeginToEnd);
     static QVariantMap linkToVariantMap(const QString &sline);
     static QVariantMap propToVariantMap(const QString &sline);
 

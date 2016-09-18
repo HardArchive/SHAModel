@@ -125,38 +125,38 @@ QStringList SHAModel::findMultiBlock(QString &str, const QString &beginTok,
     return list;
 }
 
-QPair<QString, QString> SHAModel::splitSLine(const QString &sline, const QChar &sym, ParseType type)
+QPair<QString, QString> SHAModel::splitSLine(const QString &sline, const QChar &del, ParseType type)
 {
-    bool split = false;
-    QString block1;
-    QString block2;
+    QString first;
+    QString second;
 
-    auto splitted = [&](int idx) {
+    bool split = false;
+    auto delimiter = [&](int idx) {
         const QChar c = sline.at(idx);
-        if ((split == false) && (c == sym)) {
+        if ((split == false) && (c == del)) {
             split = true;
             return;
         }
 
         if (!split) {
-            block1 += c;
+            first += c;
         } else {
-            block2 += c;
+            second += c;
         }
     };
 
     int size = sline.size();
     if (type == BeginToEnd) {
         for (int i = 0; i < size; ++i) {
-            splitted(i);
+            delimiter(i);
         }
     } else {
         for (int i = size; i > 0; --i) {
-            splitted(i);
+            delimiter(i);
         }
     }
 
-    return {block1, block2};
+    return {first, second};
 }
 
 QVariantMap SHAModel::linkToVariantMap(const QString &sline)
@@ -195,12 +195,14 @@ QVariantMap SHAModel::propToVariantMap(const QString &sline)
     if (sline.isEmpty())
         return QVariantMap();
 
-    bool isHide = false;
-    QString tmpLine = sline;
+    auto pairBlock = splitSLine(sline, '=');
+    QString first = pairBlock.first;
+    QString second = pairBlock.second;
 
+    bool isHide = false;
     //Скрытое свойство
-    if (tmpLine.at(0) == QLatin1Char('@')) {
-        tmpLine.remove(0, 1);
+    if (first.at(0) == QLatin1Char('@')) {
+        first.remove(0, 1);
         isHide = true;
     }
 
@@ -271,7 +273,7 @@ SHAModel::LineType SHAModel::getLineType(const QStringList &content, int idx)
 QVariantMap SHAModel::parseHeader()
 {
     QVariantMap header;
-    for (const QString line : m_content) {
+    for (const QString &line : m_content) {
         switch (getLineType(line)) {
         case LineType::Make:
             header.insert("package", findBlock(line, "Make(", ")"));
@@ -282,8 +284,17 @@ QVariantMap SHAModel::parseHeader()
         case LineType::Add:
             return header;
         case LineType::Ignore:
-            continue;
-        default:
+        case SHAModel::Null:
+        case SHAModel::Undefined:
+        case SHAModel::OpenBlock:
+        case SHAModel::CloseBlock:
+        case SHAModel::Link:
+        case SHAModel::Point:
+        case SHAModel::HideProp:
+        case SHAModel::Prop:
+        case SHAModel::BEGIN_SDK:
+        case SHAModel::END_SDK:
+        case SHAModel::Empty:
             continue;
         }
     }
@@ -367,14 +378,22 @@ QVariantList SHAModel::parseElements(int begin, int _size, int *prev)
             propList.clear();
             elementList += element;
             element.clear();
-            break;
+
+            continue;
         }
-        case LineType::END_SDK:
+        case LineType::END_SDK: {
             *prev = i + 1;
             return elementList;
-
-        default:
-            break;
+        }
+        case SHAModel::Null:
+        case SHAModel::Undefined:
+        case SHAModel::Ignore:
+        case SHAModel::Make:
+        case SHAModel::Ver:
+        case SHAModel::OpenBlock:
+        case SHAModel::BEGIN_SDK:
+        case SHAModel::Empty:
+            continue;
         }
     }
 
