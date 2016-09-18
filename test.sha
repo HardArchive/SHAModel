@@ -8,6 +8,7 @@ Add(Button,14822856,91,105)
  @Hint=#13:hisaerer акек|
  Left=195
  Top=70
+ HintManager="wer"
  Caption="тест"
  Point(doEnabled)
  link(onClick,11889808:doWork1,[])
@@ -26,3 +27,12 @@ BEGIN_SDK
   {
   }
 END_SDK
+Add(HintManager,4107325,413,252)
+{
+ Name="wer"
+ Font=[Tahoma,8,0,0,1]
+}
+Add(StrList,7182674,427,168)
+{
+ Strings=#0:|0:|
+}
