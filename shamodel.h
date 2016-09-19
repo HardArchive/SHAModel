@@ -12,18 +12,18 @@ class SHAModel : public QObject
     Q_OBJECT
 
 public:
-    enum DataType {
-        data_null = 0,
-        data_int,
-        data_cast_int,
-        data_str,
-        data_cast_str,
-        data_real,
-        data_cast_real,
-        data_list,
-        data_array
+    enum class ParseDataType {
+        Null = 0,
+        Int,
+        Cast_Int,
+        Str,
+        Cast_Str,
+        Real,
+        Cast_Real,
+        StrList,
+        Array
     };
-    Q_ENUM(DataType)
+    Q_ENUM(ParseDataType)
 
     enum LineType {
         Null,
@@ -75,7 +75,7 @@ private:
                                bool cutBlock = false,
                                bool removeTok = false);
     QPair<QString, QString> splitSLine(const QString &sline, const QChar &del, ParseType type = BeginToEnd);
-    DataType getValueType(const QString &svalue);
+    ParseDataType getValueType(const QString &svalue);
 
     QVariantMap linkToVariantMap(const QString &sline);
     QVariantMap propToVariantMap(const QString &sline);

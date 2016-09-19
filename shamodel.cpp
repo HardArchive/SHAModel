@@ -159,21 +159,32 @@ QPair<QString, QString> SHAModel::splitSLine(const QString &sline, const QChar &
     return {first, second};
 }
 
-SHAModel::DataType SHAModel::getValueType(const QString &svalue)
+SHAModel::ParseDataType SHAModel::getValueType(const QString &svalue)
 {
     if (svalue.isEmpty())
-        return data_null;
+        return ParseDataType::Null;
 
     const QChar c = svalue.at(0);
-    if (c == '"')
-        return data_str;
+    if (c.isDigit() or c == QLatin1Char('-')) {
+        if (svalue.contains(QLatin1Char('.')))
+            return ParseDataType::Real;
+        else
+            return ParseDataType::Int;
+    }
 
-    if(c == '#')
-        return data_list;
+    if (c == QLatin1Char('"'))
+        return ParseDataType::Str;
 
-    if(c == '[')
-        return data_list;
+    if (c == QLatin1Char('#'))
+        return ParseDataType::StrList;
 
+    if (c == QLatin1Char('['))
+        return ParseDataType::Array;
+
+    //Cast
+    if(c.isLetter()){
+
+    }
 }
 
 QVariantMap SHAModel::linkToVariantMap(const QString &sline)
