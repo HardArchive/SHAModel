@@ -159,6 +159,23 @@ QPair<QString, QString> SHAModel::splitSLine(const QString &sline, const QChar &
     return {first, second};
 }
 
+SHAModel::DataType SHAModel::getValueType(const QString &svalue)
+{
+    if (svalue.isEmpty())
+        return data_null;
+
+    const QChar c = svalue.at(0);
+    if (c == '"')
+        return data_str;
+
+    if(c == '#')
+        return data_list;
+
+    if(c == '[')
+        return data_list;
+
+}
+
 QVariantMap SHAModel::linkToVariantMap(const QString &sline)
 {
     QVariantMap map;
@@ -199,8 +216,8 @@ QVariantMap SHAModel::propToVariantMap(const QString &sline)
     QString first = pairBlock.first;
     QString second = pairBlock.second;
 
-    bool isHide = false;
     //Скрытое свойство
+    bool isHide = false;
     if (first.at(0) == QLatin1Char('@')) {
         first.remove(0, 1);
         isHide = true;
